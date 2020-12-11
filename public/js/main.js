@@ -36,7 +36,6 @@ chatForm.addEventListener('submit', (e) => {
         });
         socket.emit('message', message.text)
             // Clear input field
-        message.value = '';
         var today = new Date();
         var time = today.getHours() + ":" + today.getMinutes();
         displayMessage({
@@ -44,6 +43,7 @@ chatForm.addEventListener('submit', (e) => {
             message: message.value,
             time
         })
+        message.value = '';
     }
 
 })
