@@ -40,7 +40,7 @@ chatForm.addEventListener('submit', (e) => {
 
         displayMessage({
             username: name,
-            text: message.value,
+            message: message.value,
             time: Date()
         })
     }
