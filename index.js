@@ -31,8 +31,10 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const user = getCurrentUser(socket.id)
         userLeavesChat(socket.id);
-        io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-        io.to(user.room).emit('message', formatMessage(botName, `${user.name} has left the chat`))
+        if (user) {
+            io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
+            io.to(user.room).emit('message', formatMessage(botName, `${user.name} has left the chat`))
+        }
     })
 
     // Listen for chat message
