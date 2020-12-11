@@ -1,0 +1,27 @@
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<!DOCTYPE html>
+<html class=''>
+
+<head>
+    <meta charset='UTF-8'>
+    <!-- <link rel="stylesheet" href="/css/style.css"> -->
+</head>
+
+<body>
+    <div class='container'>
+        <h1>Socket IO</h1>
+        <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
+            <form id="chat-form" action="/chat.html">
+                <input type="text" placeholder="Name" name="name">
+                <input type="text" placeholder="Room Name" name="room">
+                <button type="submit">Join Room</button>
+            </form>
+        </div>
+</body>
+
+</html>

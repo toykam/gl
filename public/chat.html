@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html class=''>
+
+<head>
+    <meta charset='UTF-8'>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class='container' ng-cloak ng-app="chatApp">
+        <h1 id="room-name">Socket IO</h1>
+        <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
+            <div class='chatbox__user-list'>
+                <h1>User In The Room</h1>
+                <div id="users-in-room">
+                    <div class='chatbox__user--active'>
+                        <p>Maelyn Pepe</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="chatbox__messages" id="messages" style="height: 470px;overflow: scroll;">
+
+                <!-- <div class="chatbox__messages__user-message">
+                    <div class="chatbox__messages__user-message--ind-message">
+                        <p class="name">Kabir Toyyib</p>
+                        <br/>
+                        <p class="message">Hello from me</p>
+                    </div>
+                </div> -->
+
+            </div>
+            <form id="chat-form">
+                <input type="text" placeholder="Type Message" id="msg">
+            </form>
+        </div>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js" integrity="sha512-BHtomM5XDcUy7tDNcrcX1Eh0RogdWiMdXl3wJcKB3PFekXb3l5aDzymaTher61u6vEZySnoC/SAj2Y/p918Y3w==" crossorigin="anonymous"></script>
+<script src="/plugins/tata-master/dist/tata.js "></script>
+<script src="/socket.io/socket.io.js "></script>
+<script src="/js/main.js "></script>
+
+</html>
