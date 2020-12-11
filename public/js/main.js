@@ -3,6 +3,7 @@ const chatForm = document.getElementById('chat-form')
 const chatMessages = document.getElementById('messages')
 const userInRoom = document.getElementById('users-in-room')
 const roomName = document.getElementById('room-name')
+const audio = document.getElementById("myAudio");
 
 const { name, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
@@ -18,6 +19,7 @@ socket.on('UserListChanged', (users) => {
 })
 
 socket.on('message', (message) => {
+    audio.play();
     console.log(message);
     tata.text(`New message from ${message.username}`, `${message.message}`)
     displayMessage(message)
