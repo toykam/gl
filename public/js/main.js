@@ -37,11 +37,12 @@ chatForm.addEventListener('submit', (e) => {
         socket.emit('message', message.text)
             // Clear input field
         message.value = '';
-
+        var today = new Date();
+        var time = today.getHours() + ":" + today.getMinutes();
         displayMessage({
             username: name,
             message: message.value,
-            time: Date()
+            time
         })
     }
 
