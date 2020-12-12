@@ -4,10 +4,11 @@
 <head>
     <meta charset='UTF-8'>
     <link rel="stylesheet" href="/css/style.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <title>Chat App Using Socket: Chat Room</title>
 </head>
 
-<body>
+<body id="body">
     <div class='container'>
         <h1 id="room-name">Socket IO</h1>
         <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
@@ -33,9 +34,9 @@
                     </div>
                 </div> -->
 
-                <audio id="music" autoplay>
-                    <source src="horse.ogg" type="audio/ogg">
-                    <source src="/audio/music-app.mp3" type="audio/mpeg">
+                <audio id="music">
+                    <!-- <source src="horse.ogg" type="audio/ogg"> -->
+                    <source src="/audio/inbox.mp3" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
                 <div id="music-controller">
@@ -46,16 +47,18 @@
 
 
             </div>
-            <!-- <div id="user_is_typing" style="font-style: italic; font-size: 12px;font-weight: 900;"></div>
-            <form id="chat-form">
-                <input type="text" placeholder="Type Message" id="msg">
-            </form> -->
+
+            <!-- <div id="user_is_typing" style="font-style: italic; font-size: 12px;font-weight: 900;"></div> -->
+            <form id="music-upload-form" encType="multipart/form-data">
+                <input type="file" id="music-to-play" />
+            </form>
         </div>
 
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js" integrity="sha512-BHtomM5XDcUy7tDNcrcX1Eh0RogdWiMdXl3wJcKB3PFekXb3l5aDzymaTher61u6vEZySnoC/SAj2Y/p918Y3w==" crossorigin="anonymous"></script>
 <script src="/plugins/tata-master/dist/tata.js "></script>
 <script src="/socket.io/socket.io.js "></script>
+<!-- <script src="/siofu/client.js"></script> -->
 <script src="/js/music.js "></script>
 
 </html>

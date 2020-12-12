@@ -13,8 +13,10 @@
     "license": "ISC",
     "dependencies": {
         "express": "^4.17.1",
+        "express-fileupload": "^1.2.0",
         "moment": "^2.29.1",
         "nodemon": "^2.0.6",
-        "socket.io": "^3.0.4"
+        "socket.io": "^3.0.4",
+        "socketio-file-upload": "^0.7.2"
     }
 }
