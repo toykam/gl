@@ -4,6 +4,7 @@ window.addEventListener("DOMContentLoaded", event => {
             // const chatForm = document.getElementById('chat-form')
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
+            const musicUploadForm = document.getElementById('music-upload-form')
             const userInRoom = document.getElementById('users-in-room')
             const roomName = document.getElementById('room-name')
             const playButton = document.getElementById('play-button')
@@ -43,6 +44,7 @@ window.addEventListener("DOMContentLoaded", event => {
                     } else {
                         tata.error(`An error occurred: ${res.message}`)
                     }
+                    musicUploadForm.reset();
                 })
             })
 
