@@ -35,9 +35,10 @@ socket.on('user_is_typing', (message) => {
     user_is_typing.innerText = `${message}`;
 })
 
-msg.addEventListener('keyup', () => {
-    console.log('I am typing')
-    socket.emit('typing', '')
+msg.addEventListener('keyup', (e) => {
+    var msg = e.target.value;
+    console.log(msg);
+    socket.emit('typing', msg)
 })
 
 // Submit Message
