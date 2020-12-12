@@ -3,9 +3,13 @@ const chatForm = document.getElementById('chat-form')
 const chatMessages = document.getElementById('messages')
 const userInRoom = document.getElementById('users-in-room')
 const roomName = document.getElementById('room-name')
-const audio = document.getElementById("myAudio");
+    // const audio = document.getElementById("myAudio");
+var audio = new Audio('/audio/inbox.mp3');
 const msg = document.getElementById("msg");
 const user_is_typing = document.getElementById("user_is_typing");
+
+
+msg.focus()
 
 const { name, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
@@ -21,17 +25,12 @@ socket.on('UserListChanged', (users) => {
 })
 
 socket.on('message', (message) => {
-    audio.play();
-    console.log(message);
+    playSound();
     tata.text(`New message from ${message.username}`, `${message.message}`)
     displayMessage(message)
 })
 
 socket.on('user_is_typing', (message) => {
-    // audio.play();
-    console.log(message);
-    // tata.text(`Notification`, `${message}`)
-    // displayMessage(message)
     user_is_typing.innerText = `${message}`;
 })
 
@@ -89,4 +88,12 @@ function displayUsers(users) {
 
         userInRoom.appendChild(div)
     })
+}
+
+function playSound() {
+    if (!audio.paused && audio.duration > 0) {
+        audio.currentTime = 0;
+        audio.pause();
+    }
+    audio.play();
 }
