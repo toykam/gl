@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
     socket.on('typing', (message) => {
         const user = getCurrentUser(socket.id);
-        audio.play();
+        // audio.play();
         socket.broadcast.to(user.room).emit('user_is_typing', `${user} is typing`);
     })
 
