@@ -5,6 +5,7 @@ const userInRoom = document.getElementById('users-in-room')
 const roomName = document.getElementById('room-name')
 const audio = document.getElementById("myAudio");
 const msg = document.getElementById("msg");
+const user_is_typing = document.getElementById("user_is_typing");
 
 const { name, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
@@ -27,10 +28,11 @@ socket.on('message', (message) => {
 })
 
 socket.on('user_is_typing', (message) => {
-    audio.play();
+    // audio.play();
     console.log(message);
-    tata.text(`Notification`, `${message}`)
-        // displayMessage(message)
+    // tata.text(`Notification`, `${message}`)
+    // displayMessage(message)
+    user_is_typing.innerText = `${message}`;
 })
 
 msg.addEventListener('keyup', () => {

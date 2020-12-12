@@ -31,7 +31,7 @@ io.on('connection', (socket) => {
     socket.on('typing', (message) => {
         const user = getCurrentUser(socket.id);
         // audio.play();
-        socket.broadcast.to(user.room).emit('user_is_typing', `${user} is typing`);
+        socket.broadcast.to(user.room).emit('user_is_typing', `${user.name} is typing`);
     })
 
     // Runs when client disconnet
