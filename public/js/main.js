@@ -34,7 +34,7 @@ socket.on('user_is_typing', (message) => {
 })
 
 msg.addEventListener('keyup', () => {
-    print('I am typing')
+    console.log('I am typing')
     socket.emit('typing', '')
 })
 
