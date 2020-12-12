@@ -10,6 +10,7 @@ window.addEventListener("DOMContentLoaded", event => {
             const playButton = document.getElementById('play-button')
             const pauseButton = document.getElementById('pause-button')
             const stopButton = document.getElementById('stop-button')
+            const musicName = document.getElementById('music-name')
             const musicController = document.getElementById('music-button')
                 // const audio = document.getElementById("myAudio");
             var audio = new Audio('/audio/inbox.mp3');
@@ -30,22 +31,40 @@ window.addEventListener("DOMContentLoaded", event => {
                     formData.append('audio', file)
                 }
 
-                tata.text('New Message', 'Uploading music...')
+                tata.text('New Message', 'Uploading music...');
 
-                fetch(`/chat/upload/${room}`, {
-                    method: 'POST',
-                    body: formData,
-                }).then((response) => response.text()).then(response => {
-                    var res = JSON.parse(response);
-                    // console.log(response);
-                    if (res.status == true) {
-                        socket.emit('music-changed', res.data);
-                        tata.success(`An error occurred: ${res.message}`)
-                    } else {
-                        tata.error(`An error occurred: ${res.message}`)
+                var request = new XMLHttpRequest();
+
+                request.upload.addEventListener('progress', function(e) {
+                    var file1Size = $('#music-to-play')[0].files[0].size;
+
+                    if (e.loaded <= file1Size) {
+                        var percent = Math.round(e.loaded / file1Size * 100);
+                        $('#music-name').html(`Upload progress: ${percent} %`);
                     }
-                    musicUploadForm.reset();
-                })
+
+                    if (e.loaded == e.total) {
+                        $('#music-name').html(`Upload progress: 100 %`);
+                    }
+                });
+
+                request.open('post', `/chat/upload/${room}`);
+                request.timeout = 45000;
+                request.send(formData);
+
+                request.onreadystatechange = function() {
+                    if (request.readyState === 4) {
+                        var res = JSON.parse(request.response);
+                        // console.log(response);
+                        if (res.status == true) {
+                            socket.emit('music-changed', res.data);
+                            tata.success(`Upload successful: ${res.message}`)
+                        } else {
+                            tata.error(`An error occurred: ${res.message}`)
+                        }
+                        musicUploadForm.reset();
+                    }
+                }
             })
 
             // musicUploadForm.setAttribute('action', `/chat/upload/${room}`)
@@ -68,6 +87,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             console.log('Music Changed Notification From Server', fileData);
                             stopButton.click();
                             music.setAttribute('src', `/audio/${room}-group/${fileData.name}`);
+                            musicName.innerText = `${fileData.name}`;
                         })
 
                         // Join Room
