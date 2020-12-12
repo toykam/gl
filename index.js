@@ -2,9 +2,10 @@ const express = require('express');
 const path = require('path')
 const http = require('http')
 const Socket = require('socket.io');
-const { SIGCONT } = require('constants');
 const formatMessage = require('./utils/message.model');
 const { userJoin, getCurrentUser, userLeavesChat, getRoomUser } = require('./utils/users');
+
+
 const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app)
@@ -25,6 +26,12 @@ io.on('connection', (socket) => {
             // Broadcast when a user connects
         io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
         socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.name} has join the chat`))
+    })
+
+    socket.on('typing', (message) => {
+        const user = getCurrentUser(socket.id);
+        audio.play();
+        socket.broadcast.to(user.room).emit('user_is_typing', `${user} is typing`);
     })
 
     // Runs when client disconnet

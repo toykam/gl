@@ -4,6 +4,7 @@ const chatMessages = document.getElementById('messages')
 const userInRoom = document.getElementById('users-in-room')
 const roomName = document.getElementById('room-name')
 const audio = document.getElementById("myAudio");
+const msg = document.getElementById("msg");
 
 const { name, room } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
@@ -23,6 +24,18 @@ socket.on('message', (message) => {
     console.log(message);
     tata.text(`New message from ${message.username}`, `${message.message}`)
     displayMessage(message)
+})
+
+socket.on('user_is_typing', (message) => {
+    audio.play();
+    console.log(message);
+    tata.text(`Notification`, `${message}`)
+        // displayMessage(message)
+})
+
+msg.addEventListener('keyup', () => {
+    print('I am typing')
+    socket.emit('typing', '')
 })
 
 // Submit Message
