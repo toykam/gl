@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
     socket.on('chatMessage', (message) => {
         const user = getCurrentUser(socket.id)
             // console.log(user)
+        socket.broadcast.to(user.room).emit('user_is_typing', ``);
         socket.broadcast.emit('message', formatMessage(`${user.name}`, message.text))
     })
 })
