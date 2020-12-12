@@ -10,7 +10,8 @@ const stopButton = document.getElementById('stop-button')
 var audio = new Audio('/audio/inbox.mp3');
 var music = document.getElementById("music");
 
-stopButton.click();
+music.currentTime = 0;
+music.pause();
 // const msg = document.getElementById("msg");
 // const user_is_typing = document.getElementById("user_is_typing");
 
@@ -56,11 +57,12 @@ playButton.addEventListener('click', () => {
     music.play();
     socket.emit('music_state_changed', {
         'state': 'PLAYING',
-        'current_duration': music.duration
+        'current_duration': music.currentTime
     })
 })
 
 socket.on('music_state_changed', (data) => {
+    console.log(data);
     if (data.state == 'PLAYING') {
         music = document.getElementById("music");
         music.currentTime = data.current_duration;
@@ -84,7 +86,7 @@ pauseButton.addEventListener('click', () => {
     // music.play();
     socket.emit('music_state_changed', {
         'state': 'PAUSED',
-        'current_duration': music.duration
+        'current_duration': music.currentTime
     })
 })
 
@@ -95,7 +97,7 @@ stopButton.addEventListener('click', () => {
     }
     socket.emit('music_state_changed', {
         'state': 'STOPPED',
-        'current_duration': 0
+        'current_duration': music.currentTime
     })
 })
 
