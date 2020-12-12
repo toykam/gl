@@ -6,15 +6,15 @@ const roomName = document.getElementById('room-name')
 const playButton = document.getElementById('play-button')
 const pauseButton = document.getElementById('pause-button')
 const stopButton = document.getElementById('stop-button')
+const musicController = document.getElementById('music-button')
     // const audio = document.getElementById("myAudio");
 var audio = new Audio('/audio/inbox.mp3');
 var music = document.getElementById("music");
 
+// var myDetail;
+
 music.currentTime = 0;
 music.pause();
-// const msg = document.getElementById("msg");
-// const user_is_typing = document.getElementById("user_is_typing");
-
 
 // msg.focus()
 
@@ -54,11 +54,11 @@ playButton.addEventListener('click', () => {
         music.currentTime = 0;
         music.pause();
     }
-    music.play();
     socket.emit('music_state_changed', {
         'state': 'PLAYING',
         'current_duration': music.currentTime
     })
+    music.play();
 })
 
 socket.on('music_state_changed', (data) => {
@@ -144,10 +144,12 @@ function displayMessage(message) {
 function displayUsers(users) {
     userInRoom.innerHTML = '';
     users.map((user) => {
-        const div = document.createElement('div');
-        div.classList.add('chatbox__user--active')
-        div.innerHTML = `<p>${user.name}</p>`
-
+                const div = document.createElement('div');
+                div.classList.add(`chatbox__user--${user.type == 'admin' ? 'active' : 'busy'}`)
+                div.innerHTML = `<div>
+            <p>${user.name}</p>
+            ${user.type =='admin' ? '' : user.type =='admin' ? '<button class="switch-admin" id="`${user.id}`">swap admin</button>' : ''}
+        </div>`
         userInRoom.appendChild(div)
     })
 }

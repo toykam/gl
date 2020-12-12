@@ -85,7 +85,6 @@ function displayUsers(users) {
         const div = document.createElement('div');
         div.classList.add('chatbox__user--active')
         div.innerHTML = `<p>${user.name}</p>`
-
         userInRoom.appendChild(div)
     })
 }
