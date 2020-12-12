@@ -12,6 +12,16 @@
         <h1>Socket IO</h1>
         <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
             <form id="chat-form" action="/chat.html">
+                <legend>Join Chat Rooom</legend>
+                <input type="text" placeholder="Name" name="name">
+                <input type="text" placeholder="Room Name" name="room">
+                <button type="submit">Join Room</button>
+            </form>
+            <br/>
+            <br/>
+            <br/>
+            <form id="chat-form" action="/music.html">
+                <legend>Join Music Room</legend>
                 <input type="text" placeholder="Name" name="name">
                 <input type="text" placeholder="Room Name" name="room">
                 <button type="submit">Join Room</button>

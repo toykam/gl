@@ -48,6 +48,11 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on('music_state_changed', (data) => {
+        var user = getCurrentUser(socket.id);
+        socket.broadcast.to(user.room).emit('music_state_changed', data)
+    })
+
     // Listen for chat message
     socket.on('chatMessage', (message) => {
         const user = getCurrentUser(socket.id)
