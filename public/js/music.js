@@ -48,7 +48,7 @@ window.addEventListener("DOMContentLoaded", event => {
                     }
                 });
 
-                request.open('post', `/chat/upload/${room}`);
+                request.open('post', `/api/chat/upload/${room}`);
                 request.timeout = 45000;
                 request.send(formData);
 

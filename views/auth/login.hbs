@@ -1,0 +1,60 @@
+
+<div class="ui content container" id="features">
+    <h2 class="ui inverted header">Please sign up</h2>
+    <br/>
+    <div class="ui center aligned grid">
+      <div class="ui container">
+        <form class="ui large form" method="POST" action="/api/auth/login" id="loginForm">
+            <div id="msg"></div>
+            <div class="field">
+                <div class="ui input">
+                    <input name="email" placeholder="Email address" type="text" id="email"/>
+                </div>
+            </div>
+            <br/>
+            <div class="field">
+                <div class="ui input">
+                    <input name="password" placeholder="Password" type="password" id="password"/>
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    Don't have an account? <a href="/auth/register">Register</a>
+                </div>
+            </div>
+            <br/>
+            <button class="ui fluid large primary button" type="submit">
+                Sign in
+            </button>
+        </form>
+      </div>
+    </div>
+</div>
+
+<script>
+    const msgDiv = document.getElementById('msg');
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        msgDiv.innerHTML = `<p class='ui blue'>Login in progress</p>`;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var formData = new FormData(loginForm);
+        formData.append('email', email);
+        formData.append('password', password);
+
+        $.post('/api/auth/login', {'email':email, 'password':password}, (res) => {
+            // console.log(res);
+            if (res.status == true) {
+                swal(`${res.message}`);
+                msgDiv.innerHTML = `<p class='ui positive'>${res.message}</p>`;
+            } else {
+                swal(`${res.message}`);
+                msgDiv.innerHTML = `<p class='ui negative'>${res.message}</p>`;
+            }
+            msgDiv.focus()
+        })
+    })
+    
+</script>

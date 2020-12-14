@@ -1,0 +1,65 @@
+{{!-- <h1>Login Page</h1> --}}
+
+<div class="ui content container" >
+    <h2 class="ui inverted header">Please sign up</h2>
+    <br/>
+    <div class="ui center aligned grid">
+      <div class="ui container">
+        <form class="ui large form" method="POST" action="/auth/login" id="registerForm">
+            <div id="msg"></div>
+            <div class="field">
+                <div class="ui input">
+                <input name="name" placeholder="Full name" type="text" id="name"/>
+                </div>
+            </div>
+            <br/>
+            <div class="field">
+                <div class="ui input">
+                <input name="email" placeholder="Email address" type="email" id="email"/>
+                </div>
+            </div>
+            <br/>
+            <div class="field">
+                <div class="ui input">
+                <input name="password" placeholder="Password" type="password" id="password" />
+                </div>
+            </div>
+            <div class="field">
+                <div class="ui input">
+                    Do you have an account? <a href="/auth/login">Login</a>
+                </div>
+            </div>
+            <br/>
+            <button class="ui fluid large primary button" type="submit">
+                Sign in
+            </button>
+        </form>
+      </div>
+    </div>
+</div>
+
+<script>
+    const msgDiv = document.getElementById('msg');
+    const registerForm = document.getElementById('registerForm');
+
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        msgDiv.innerHTML = `<p class='ui blue'>Registration in progress</p>`;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var name = document.getElementById('name').value;
+
+        $.post('/api/auth/register', {'email':email, 'password':password, 'name': name}, (res) => {
+            // console.log(res);
+            if (res.status == true) {
+                swal(`${res.message}`);
+                msgDiv.innerHTML = `<p class='ui positive'>${res.message}</p>`;
+            } else {
+                swal(`${res.message}`);
+                msgDiv.innerHTML = `<p class='ui negative'>${res.message}</p>`;
+            }
+            msgDiv.focus()
+        })
+    })
+    
+</script>

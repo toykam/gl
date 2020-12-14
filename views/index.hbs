@@ -1,0 +1,44 @@
+<div class="ui content container" id="home">
+    <h1 class="ui inverted header">Cover your page</h1>
+    <p>
+    Cover is a one-page template for building simple and beautiful home
+    pages. Download, edit the text, and add your own fullscreen background
+    photo to make it your own.
+    </p>
+    <a class="ui huge button positive" href="/auth/register">Sign Up</a>
+    <a class="ui huge button negative" href="/auth/login">Sign In</a>
+    {{!-- <a class="ui huge button">Sign In</a> --}}
+</div>
+
+<div class="ui content container" id="contact">
+    <h1 class="ui inverted header">Contact</h1>
+    <p>
+    Cover is a one-page template for building simple and beautiful home
+    pages. Download, edit the text, and add your own fullscreen background
+    photo to make it your own.
+    </p>
+    <a class="ui huge button">Learn more</a>
+</div>
+
+<div class="ui content container" id="features">
+    <h1 class="ui inverted header">Features</h1>
+    <p>
+    Cover is a one-page template for building simple and beautiful home
+    pages. Download, edit the text, and add your own fullscreen background
+    photo to make it your own.
+    </p>
+    <a class="ui huge button">Learn more</a>
+</div>
+
+<script>
+    $(".content").hide();
+    $('#home').show();
+    $('.item.nav-items').click((e) => {
+        $('.item.nav-items').removeClass('active');
+        var element = e.target;
+        var id = element.attributes.href.nodeValue;
+        element.classList.add('active');
+        $(".content").hide();
+        $(`${id}`).show();
+    })
+</script>
