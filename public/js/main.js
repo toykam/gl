@@ -1,4 +1,9 @@
-const socket = io();
+const socket = io('https://hacktor-chat.herokuapp.com/', {
+    'reconnection': true,
+    'reconnectionDelay': 500,
+    'reconnectionAttempts': Infinity,
+    'transports': ['websocket'],
+});
 const chatForm = document.getElementById('chat-form')
 const chatMessages = document.getElementById('messages')
 const userInRoom = document.getElementById('users-in-room')
