@@ -51,6 +51,11 @@ function initSocketConnections(io) {
             }
         })
 
+        socket.on('uploading_music', (message) => {
+            const user = getCurrentUser(socket.id);
+            socket.broadcast.to(`${user.room}`).emit('uploading_music', message);
+        })
+
         // Runs when client disconnet
         socket.on('disconnect', () => {
             try {

@@ -46,12 +46,15 @@ window.addEventListener("DOMContentLoaded", event => {
                     if (e.loaded <= file1Size) {
                         var percent = Math.round(e.loaded / file1Size * 100);
                         $('#music-name').html(`Upload progress: ${percent} %`);
+                        socket.emit('uploading_music', `Music Upload progress: ${percent} %`);
                     }
 
                     if (e.loaded == e.total) {
                         $('#music-name').html(`Upload progress: 100 %`);
                     }
                 });
+
+
 
                 request.open('post', `/api/chat/upload/${room}`);
                 request.timeout = 45000;
@@ -86,6 +89,10 @@ window.addEventListener("DOMContentLoaded", event => {
                         //     music = new Audio(`/audio/${room}-group/${fileData.file.name}`);
                         //     tata.text('New Message', 'Upload complete')
                         // })
+
+                        socket.on('uploading_music', (message) => {
+                            musicName.innerText = `${message}`;
+                        })
 
                         socket.on('changed-music', (fileData) => {
                             // To Stop The Music
