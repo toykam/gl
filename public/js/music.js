@@ -7,7 +7,7 @@ window.addEventListener("DOMContentLoaded", event => {
             //     'reconnectionAttempts': Infinity,
             //     'transports': ['websocket'],
             // });
-            let socket = new WebSocket(httpUrlToWebSockeUrl(domain));
+            let socket = new WebSocket(httpUrlToWebSocketUrl(domain));
             // const chatForm = document.getElementById('chat-form')
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
@@ -244,6 +244,6 @@ window.addEventListener("DOMContentLoaded", event => {
             // var myDetail;
 });
 
-function httpUrlToWebSockeUrl(url) {
+function httpUrlToWebSocketUrl(url) {
     return url.replace(/(http)(s)?\:\/\//, "ws$2://");
 }

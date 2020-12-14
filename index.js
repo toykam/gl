@@ -27,8 +27,7 @@ const io = Socket(server, {
     'transports': ['websocket'],
 })
 
-// initialize socket connection
-initSocketConnections(io)
+
 
 // Set Static File to be served
 app.use(express.static(path.join(__dirname, 'public')))
@@ -62,3 +61,4 @@ app.get('/home', (req, res) => {
 server.listen(port, () => {
     console.log(`Server running on port : ${port}`)
 })
+initSocketConnections(io)
