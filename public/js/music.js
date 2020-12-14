@@ -6,7 +6,7 @@ window.addEventListener("DOMContentLoaded", event => {
                 'reconnectionAttempts': Infinity,
                 'transports': ['websocket'],
             });
-            // const chatForm = document.getElementById('chat-form')
+            const chatForm = document.getElementById('chat-form')
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
             const musicUploadForm = document.getElementById('music-upload-form')
@@ -115,11 +115,11 @@ window.addEventListener("DOMContentLoaded", event => {
                             user_is_typing.innerText = `${message}`;
                         })
 
-                        // msg.addEventListener('keyup', (e) => {
-                        //     var msg = e.target.value;
-                        //     console.log(msg);
-                        //     socket.emit('typing', msg)
-                        // })
+                        msg.addEventListener('keyup', (e) => {
+                            var msg = e.target.value;
+                            console.log(msg);
+                            socket.emit('typing', msg)
+                        })
 
                         // Music Controller
                         playButton.addEventListener('click', () => {

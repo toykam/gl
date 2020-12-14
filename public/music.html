@@ -22,18 +22,10 @@
                     </div> -->
                 </div>
 
-
-
-            </div>
-            <div class="chatbox__messages" id="messages" style="height: 470px;overflow: scroll;">
-
-                <!-- <div class="chatbox__messages__user-message">
-                    <div class="chatbox__messages__user-message--ind-message">
-                        <p class="name">Kabir Toyyib</p>
-                        <br/>
-                        <p class="message">Hello from me</p>
-                    </div>
-                </div> -->
+                <div id="music-name" style="font-style: italic; font-size: 12px;font-weight: 900;">Select a music to listen to</div>
+                <form id="music-upload-form" encType="multipart/form-data">
+                    <input type="file" id="music-to-play" />
+                </form>
 
                 <audio id="music">
                     <!-- <source src="horse.ogg" type="audio/ogg"> -->
@@ -47,11 +39,23 @@
                 </div>
 
 
+
+            </div>
+            <div class="chatbox__messages" id="messages" style="height: 500px; overflow: scroll;">
+
+                <!-- <div class="chatbox__messages__user-message">
+                    <div class="chatbox__messages__user-message--ind-message">
+                        <p class="name">Kabir Toyyib</p>
+                        <br/>
+                        <p class="message">Hello from me</p>
+                    </div>
+                </div> -->
             </div>
 
-            <div id="music-name" style="font-style: italic; font-size: 12px;font-weight: 900;">Select a music to listen to</div>
-            <form id="music-upload-form" encType="multipart/form-data">
-                <input type="file" id="music-to-play" />
+
+            <div id="user_is_typing" style="font-style: italic; font-size: 12px;font-weight: 900;"></div>
+            <form id="chat-form">
+                <input type="text" placeholder="Type Message" id="msg">
             </form>
         </div>
 
