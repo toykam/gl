@@ -1,1 +1,1 @@
-web: nodemon index.js
+web: npm test_socket.js

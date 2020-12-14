@@ -19,6 +19,7 @@ const initSocketConnections = require('./utils/socket-connections');
 const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app)
+
 const io = Socket(server, {
     'reconnection': true,
     'reconnectionDelay': 500,

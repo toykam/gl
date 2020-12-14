@@ -1,13 +1,11 @@
 window.addEventListener("DOMContentLoaded", event => {
-            var domain = `${window.location.protocol}//${window.location.host}`;
-            console.log(domain);
-            // const socket = io('/', {
-            //     'reconnection': true,
-            //     'reconnectionDelay': 500,
-            //     'reconnectionAttempts': Infinity,
-            //     'transports': ['websocket'],
-            // });
-            let socket = new WebSocket(httpUrlToWebSockeUrl(domain));
+
+            const socket = io('/', {
+                'reconnection': true,
+                'reconnectionDelay': 500,
+                'reconnectionAttempts': Infinity,
+                'transports': ['websocket'],
+            });
             // const chatForm = document.getElementById('chat-form')
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
@@ -89,7 +87,7 @@ window.addEventListener("DOMContentLoaded", event => {
                         //     tata.text('New Message', 'Upload complete')
                         // })
 
-                        socket.addEventListener('changed-music', (fileData) => {
+                        socket.on('changed-music', (fileData) => {
                             // To Stop The Music
                             console.log('Music Changed Notification From Server', fileData);
                             stopButton.click();
@@ -98,27 +96,22 @@ window.addEventListener("DOMContentLoaded", event => {
                         })
 
                         // Join Room
-                        socket.send('JoinRoom', { name, room })
+                        socket.emit('JoinRoom', { name, room })
                         roomName.innerText = room;
                         // 
-                        socket.addEventListener('UserListChanged', (users) => {
+                        socket.on('UserListChanged', (users) => {
                             playSound();
                             console.log(users);
                             displayUsers(users);
                         })
 
-                        socket.onmessage = (message) => {
-                            console.log(message);
+                        socket.on('message', (message) => {
                             playSound();
                             tata.text(`New message from ${message.username}`, `${message.message}`)
                             displayMessage(message)
-                        }
+                        })
 
-                        // socket.addEventListener('onmessage', (message) => {
-
-                        // })
-
-                        socket.addEventListener('user_is_typing', (message) => {
+                        socket.on('user_is_typing', (message) => {
                             user_is_typing.innerText = `${message}`;
                         })
 
@@ -141,7 +134,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             music.play();
                         })
 
-                        socket.addEventListener('music_state_changed', (data) => {
+                        socket.on('music_state_changed', (data) => {
                             console.log(data);
                             if (data.state == 'PLAYING') {
                                 music = document.getElementById("music");
@@ -183,28 +176,29 @@ window.addEventListener("DOMContentLoaded", event => {
 
 
                         // Submit Message
-                        // chatForm.addEventListener('submit', (e) => {
-                        //     e.preventDefault();
-                        //     // Get message from the input field
-                        //     const message = e.target.elements.msg;
-                        //     // Emit Message to the server
-                        //     // To make sure user is not sending am empty message, hahaha
-                        //     if (message.value.length > 0) {
-                        //         socket.emit('chatMessage', {
-                        //             'text': message.value,
-                        //         });
-                        //         socket.emit('message', message.text)
-                        //             // Clear input field
-                        //         var today = new Date();
-                        //         var time = today.getHours() + ":" + today.getMinutes();
-                        //         displayMessage({
-                        //             username: name,
-                        //             message: message.value,
-                        //             time
-                        //         })
-                        //         message.value = '';
-                        //     }
-                        // })
+                        chatForm.addEventListener('submit', (e) => {
+                            e.preventDefault();
+                            // Get message from the input field
+                            const message = e.target.elements.msg;
+                            // Emit Message to the server
+                            // To make sure user is not sending am empty message, hahaha
+                            if (message.value.length > 0) {
+                                socket.emit('chatMessage', {
+                                    'text': message.value,
+                                });
+                                socket.emit('message', message.text)
+                                    // Clear input field
+                                var today = new Date();
+                                var time = today.getHours() + ":" + today.getMinutes();
+                                displayMessage({
+                                    username: name,
+                                    message: message.value,
+                                    time
+                                })
+                                message.value = '';
+                            }
+
+                        })
 
                         // Display Message
                         function displayMessage(message) {
@@ -243,7 +237,3 @@ window.addEventListener("DOMContentLoaded", event => {
             });
             // var myDetail;
 });
-
-function httpUrlToWebSockeUrl(url) {
-    return url.replace(/(http)(s)?\:\/\//, "ws$2://");
-}

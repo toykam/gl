@@ -2,11 +2,11 @@
     "name": "web-socket",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "test_socket.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon index",
-        "start": "node index"
+        "dev": "nodemon test_socket",
+        "start": "node test_socket"
     },
     "keywords": [],
     "author": "",

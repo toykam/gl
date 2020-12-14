@@ -1,4 +1,4 @@
-const socket = io('https://hacktor-chat.herokuapp.com/', {
+const socket = io('/', {
     'reconnection': true,
     'reconnectionDelay': 500,
     'reconnectionAttempts': Infinity,
