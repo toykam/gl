@@ -44,16 +44,20 @@ function initSocketConnections(io) {
         socket.on('typing', (message) => {
             console.log(message);
             const user = getCurrentUser(socket.id);
-            if (message.length > 0) {
-                socket.broadcast.to(user.room).emit('user_is_typing', `${user.name} is typing`);
-            } else {
-                socket.broadcast.to(user.room).emit('user_is_typing', ``);
+            if (user) {
+                if (message.length > 0) {
+                    socket.broadcast.to(user.room).emit('user_is_typing', `${user.name} is typing`);
+                } else {
+                    socket.broadcast.to(user.room).emit('user_is_typing', ``);
+                }
             }
         })
 
         socket.on('uploading_music', (message) => {
             const user = getCurrentUser(socket.id);
-            socket.broadcast.to(`${user.room}`).emit('uploading_music', message);
+            if (user) {
+                socket.broadcast.to(`${user.room}`).emit('uploading_music', message);
+            }
         })
 
         // Runs when client disconnet
@@ -89,8 +93,10 @@ function initSocketConnections(io) {
         socket.on('chatMessage', (message) => {
             const user = getCurrentUser(socket.id)
                 // console.log(user)
-            socket.broadcast.to(user.room).emit('user_is_typing', ``);
-            socket.broadcast.emit('message', formatMessage(`${user.name}`, message.text))
+            if (user) {
+                socket.broadcast.to(user.room).emit('user_is_typing', ``);
+                socket.broadcast.emit('message', formatMessage(`${user.name}`, message.text))
+            }
         })
     })
 }
