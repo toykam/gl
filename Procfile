@@ -1,1 +1,1 @@
-web: npm test_socket.js
+web: node test_socket.js
