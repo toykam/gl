@@ -7,7 +7,7 @@ const router = express.Router()
 router.post('/upload/:room', (req, res) => {
     // Do file upload here
     try {
-        var dir = __dirname + `/../public/audio/${req.params.room}-group/`;
+        var dir = __dirname + `./../../public/audio/${req.params.room}-group/`;
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, 0744);
         }
@@ -36,6 +36,7 @@ router.post('/upload/:room', (req, res) => {
             });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).send(err);
     }
 
