@@ -55,15 +55,15 @@ app.use('/api/chat', require('./routes/api/chat-route'))
 app.use('/api/auth', require('./routes/api/auth-route'))
 app.use('/api/user', require('./routes/api/user-route'))
 
-app.get('/home', (req, res) => {
-    res.render('index', {
-        'pageTitle': 'Home'
-    });
-})
+// app.get('/home', (req, res) => {
+//     res.render('index', {
+//         'pageTitle': 'Home'
+//     });
+// })
 
 app.get('/', (req, res) => {
     res.render('index', {
-        'pageTitle': 'Home'
+        'pageTitle': 'Home : Group Listening'
     });
 })
 
