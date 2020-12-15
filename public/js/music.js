@@ -142,6 +142,12 @@ window.addEventListener("DOMContentLoaded", event => {
                                 music.currentTime = 0;
                                 music.pause();
                             }
+                            $('#play-button').hide();
+                            $('#pause-button').show();
+                            $('#stop-button').show();
+                            // pauseButton.style.display = 'inline';
+                            // stopButton.style.display = 'inline';
+                            // playButton.style.display = 'hidden';
                             socket.emit('music_state_changed', {
                                 'state': 'PLAYING',
                                 'current_duration': music.currentTime
@@ -168,9 +174,11 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         pauseButton.addEventListener('click', () => {
                             if (!music.paused && music.duration > 0) {
-                                // music.currentTime = 0;
                                 music.pause();
                             }
+                            $('#play-button').show();
+                            $('#pause-button').hide();
+                            $('#stop-button').show();
                             // music.play();
                             socket.emit('music_state_changed', {
                                 'state': 'PAUSED',
@@ -183,6 +191,9 @@ window.addEventListener("DOMContentLoaded", event => {
                                 music.currentTime = 0;
                                 music.pause();
                             }
+                            $('#play-button').show();
+                            $('#pause-button').hide();
+                            $('#stop-button').hide();
                             socket.emit('music_state_changed', {
                                 'state': 'STOPPED',
                                 'current_duration': music.currentTime
@@ -231,6 +242,8 @@ window.addEventListener("DOMContentLoaded", event => {
                             if (music.paused) {
                                 socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PAUSED' })
                             } else {
+                                playButton.style.display = 'hidden';
+                                pauseButton.style.display = 'inline';
                                 socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PLAYING' })
                             }
                             var duration = music.duration;
