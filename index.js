@@ -28,9 +28,12 @@ const io = Socket(server, {
 })
 
 
+// exphbs.registerHelper('json', function(context) {
+//     return JSON.stringify(context);
+// });
 
 // Set Static File to be served
-app.use(express.static(path.join(__dirname, 'public')))
+app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }));
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', partialsDir: 'partials' }));
@@ -52,6 +55,12 @@ app.use('/api/auth', require('./routes/api/auth-route'))
 app.use('/api/user', require('./routes/api/user-route'))
 
 app.get('/home', (req, res) => {
+    res.render('index', {
+        'pageTitle': 'Home'
+    });
+})
+
+app.get('/', (req, res) => {
     res.render('index', {
         'pageTitle': 'Home'
     });

@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", event => {
-
+            // var currentUser = JSON.parse('{{{json group}}}');
+            // console.log(group)
             const socket = io('/', {
                 'reconnection': true,
                 'reconnectionDelay': 500,
@@ -7,6 +8,8 @@ window.addEventListener("DOMContentLoaded", event => {
                 'transports': ['websocket'],
             });
             const chatForm = document.getElementById('chat-form')
+            const room = document.getElementById('room-name').innerText;
+            const name = document.getElementById('user-name').innerText;
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
             const musicUploadForm = document.getElementById('music-upload-form')
@@ -17,12 +20,12 @@ window.addEventListener("DOMContentLoaded", event => {
             const stopButton = document.getElementById('stop-button')
             const musicName = document.getElementById('music-name')
             const musicController = document.getElementById('music-button')
-            var audio = new Audio('/audio/inbox.mp3');
+            var audio = new Audio('/public/audio/inbox.mp3');
             var music = document.getElementById("music");
 
-            const { name, room } = Qs.parse(location.search, {
-                ignoreQueryPrefix: true
-            })
+            // const { name, room } = Qs.parse(location.search, {
+            //     ignoreQueryPrefix: true
+            // })
 
             musicToPlay.addEventListener('change', (e) => {
                 e.preventDefault();
@@ -102,7 +105,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             // To Stop The Music
                             console.log('Music Changed Notification From Server', fileData);
                             stopButton.click();
-                            music.setAttribute('src', `/audio/${room}-group/${fileData.name}`);
+                            music.setAttribute('src', `/public/audio/${room}-group/${fileData.name}`);
                             // music = new Audio(`/audio/${room}-group/${fileData.name}`);
                             musicName.innerText = `${fileData.name}`;
                             console.log(music);
@@ -110,8 +113,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         // Join Room
                         socket.emit('JoinRoom', { name, room })
-                        roomName.innerText = room;
-                        // 
+
                         socket.on('UserListChanged', (users) => {
                             playSound();
                             console.log(users);
@@ -130,7 +132,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         msg.addEventListener('keyup', (e) => {
                             var msg = e.target.value;
-                            console.log(msg);
+                            // console.log(msg);
                             socket.emit('typing', msg)
                         })
 
@@ -191,7 +193,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             if (group.group.musicData != null) {
                                 var musicData = group.group.musicData;
                                 console.log(musicData)
-                                music.setAttribute('src', `/audio/${room}-group/${musicData.name}`);
+                                music.setAttribute('src', `/public/audio/${room}-group/${musicData.name}`);
                                 music.currentTime = group.group.currentPosition;
                                 if (group.group.state == 'PLAYING') {
                                     music.play();
@@ -254,7 +256,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             currSec = Math.floor(currSec % 60);
                             currSec = currSec >= 10 ? currSec : '0' + currSec;
 
-                            $("#total_duration").html(min + ":" + sec + ' <==> ' + currMin + ":" + currSec);
+                            $("#total_duration").text(min + ":" + sec + ' <==> ' + currMin + ":" + currSec);
                         })
 
                         // music.audioTrackList.onaddtrack = function(event) {

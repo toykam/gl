@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
     <title>Chat App Using Socket: Chat Room</title>
 </head>
 
@@ -33,12 +34,12 @@
                     Your browser does not support the audio element.
                 </audio>
                 <br/>
-                <p id="total_duration"></p>
+                <p id="total_duration" style="font-size: 32 !important;"></p>
                 <br/>
                 <div id="music-controller">
-                    <button id="play-button">Play</button>
-                    <button id="pause-button">Pause</button>
-                    <button id="stop-button">Stop</button>
+                    <button class="fa fa-play-circle" id="play-button">&nbsp;&nbsp;Play</button>
+                    <button class="fa fa-pause-circle" id="pause-button">&nbsp;&nbsp;Pause</button>
+                    <button class="fa fa-stop-circle" id="stop-button">&nbsp;&nbsp;Stop</button>
                 </div>
 
 

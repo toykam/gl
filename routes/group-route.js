@@ -2,11 +2,11 @@ const express = require('express')
 
 const router = express.Router();
 
-router.get('/login', (req, res) => {
-    res.render('auth/login')
+router.get('/join', (req, res) => {
+    res.render('group/join', {
+        'pageTitle': 'Join a Room'
+    })
 })
-router.get('/register', (req, res) => {
-    res.render('auth/register')
-})
+
 
 module.exports = router;

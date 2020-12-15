@@ -30,10 +30,6 @@ body {
     width: 100%;
 }
 
-#total_duration {
-    font-size: 100;
-}
-
 .container h1 {
     margin: 0.5em auto;
     color: #FFF;
@@ -204,4 +200,12 @@ body {
 
  :-ms-input-placeholder {
     color: rgba(255, 255, 255, 0.9);
+}
+
+#total_duration {
+    font-size: 100 !important;
+}
+
+#music-controller>button {
+    color: red;
 }

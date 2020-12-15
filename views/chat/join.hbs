@@ -1,0 +1,54 @@
+<div class='container'>
+    <div style="display: flex;">
+        <h1 id="room-name"> {{ group.room }}</h1> &nbsp;&nbsp;&nbsp;&nbsp;
+        <h1 id="user-name"> {{ group.name }}</h1>
+    </div>
+    <div class='chatbox' ng-controller="MessageCtrl as chatMessage">
+        <div class='chatbox__user-list'>
+            <h1>User In The Room</h1>
+            <a href="/group/join">Leave room</a>
+            <div id="users-in-room">
+                <!-- <div class='chatbox__user--active'>
+                    <p>Maelyn Pepe</p>
+                </div> -->
+            </div>
+
+            <div id="music-name" style="font-style: italic; font-size: 12px;font-weight: 900;">Select a music to listen to</div>
+            <form id="music-upload-form" encType="multipart/form-data">
+                <input type="file" id="music-to-play" />
+            </form>
+
+            <audio id="music">
+                <!-- <source src="horse.ogg" type="audio/ogg"> -->
+                <source src="/public/audio/inbox.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <br/>
+            <p id="total_duration" style="font-size: 32 !important;"></p>
+            <br/>
+            <div id="music-controller">
+                <button class="fa fa-play-circle" id="play-button">&nbsp;&nbsp;Play</button>
+                <button class="fa fa-pause-circle" id="pause-button">&nbsp;&nbsp;Pause</button>
+                <button class="fa fa-stop-circle" id="stop-button">&nbsp;&nbsp;Stop</button>
+            </div>
+
+
+
+        </div>
+        <div class="chatbox__messages" id="messages" style="height: 500px; overflow: scroll;">
+
+            <!-- <div class="chatbox__messages__user-message">
+                <div class="chatbox__messages__user-message--ind-message">
+                    <p class="name">Kabir Toyyib</p>
+                    <br/>
+                    <p class="message">Hello from me</p>
+                </div>
+            </div> -->
+        </div>
+
+
+        <div id="user_is_typing" style="font-style: italic; font-size: 12px;font-weight: 900;"></div>
+        <form id="chat-form">
+            <input type="text" placeholder="Type Message" id="msg">
+        </form>
+    </div>
