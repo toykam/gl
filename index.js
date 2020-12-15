@@ -28,9 +28,10 @@ const io = Socket(server, {
 })
 
 
-// exphbs.registerHelper('json', function(context) {
-//     return JSON.stringify(context);
-// });
+app.use((req, res, next) => {
+    req.user = null;
+    next();
+})
 
 // Set Static File to be served
 app.use('/public', express.static(path.join(__dirname, 'public')))
