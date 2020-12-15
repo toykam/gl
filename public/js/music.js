@@ -225,7 +225,7 @@ window.addEventListener("DOMContentLoaded", event => {
                         })
 
                         music.addEventListener('timeupdate', (data) => {
-                            console.log(music.paused)
+                            // console.log(music.paused)
                             if (music.paused) {
                                 socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PAUSED' })
                             } else {
