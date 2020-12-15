@@ -17,7 +17,6 @@ window.addEventListener("DOMContentLoaded", event => {
             const stopButton = document.getElementById('stop-button')
             const musicName = document.getElementById('music-name')
             const musicController = document.getElementById('music-button')
-                // const audio = document.getElementById("myAudio");
             var audio = new Audio('/audio/inbox.mp3');
             var music = document.getElementById("music");
 
@@ -57,7 +56,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
 
                 request.open('post', `/api/chat/upload/${room}`);
-                request.timeout = 45000;
+                request.timeout = 145000;
                 request.send(formData);
 
                 request.onreadystatechange = function() {
@@ -82,6 +81,11 @@ window.addEventListener("DOMContentLoaded", event => {
                         music.currentTime = 0;
                         playPromise.then(_ => music.pause());
 
+
+
+
+                        // music.onplay
+
                         // uploader.addEventListener('complete', (fileData) => {
                         //     console.log(fileData);
                         //     stopButton.click();
@@ -99,7 +103,9 @@ window.addEventListener("DOMContentLoaded", event => {
                             console.log('Music Changed Notification From Server', fileData);
                             stopButton.click();
                             music.setAttribute('src', `/audio/${room}-group/${fileData.name}`);
+                            // music = new Audio(`/audio/${room}-group/${fileData.name}`);
                             musicName.innerText = `${fileData.name}`;
+                            console.log(music);
                         })
 
                         // Join Room
@@ -181,6 +187,18 @@ window.addEventListener("DOMContentLoaded", event => {
                             })
                         })
 
+                        socket.on('welcome', (group) => {
+                            if (group.group.musicData != null) {
+                                var musicData = group.group.musicData;
+                                console.log(musicData)
+                                music.setAttribute('src', `/audio/${room}-group/${musicData.name}`);
+                                music.currentTime = group.group.currentPosition;
+                                if (group.group.state == 'PLAYING') {
+                                    music.play();
+                                }
+                            }
+                        })
+
 
                         // Submit Message
                         chatForm.addEventListener('submit', (e) => {
@@ -204,8 +222,48 @@ window.addEventListener("DOMContentLoaded", event => {
                                 })
                                 message.value = '';
                             }
-
                         })
+
+                        music.addEventListener('timeupdate', (data) => {
+                            console.log(music.paused)
+                            if (music.paused) {
+                                socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PAUSED' })
+                            } else {
+                                socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PLAYING' })
+                            }
+                            var duration = music.duration;
+                            var currentTime = music.currentTime;
+
+                            var sec = new Number();
+                            var min = new Number();
+
+                            var currSec = new Number();
+                            var currMin = new Number();
+
+                            sec = Math.floor(duration);
+                            min = Math.floor(sec / 60);
+
+                            currSec = Math.floor(currentTime);
+                            currMin = Math.floor(currSec / 60);
+
+                            min = min >= 10 ? min : '0' + min;
+                            sec = Math.floor(sec % 60);
+                            sec = sec >= 10 ? sec : '0' + sec;
+
+                            currMin = currMin >= 10 ? currMin : '0' + currMin;
+                            currSec = Math.floor(currSec % 60);
+                            currSec = currSec >= 10 ? currSec : '0' + currSec;
+
+                            $("#total_duration").html(min + ":" + sec + ' <==> ' + currMin + ":" + currSec);
+                        })
+
+                        // music.audioTrackList.onaddtrack = function(event) {
+                        //     trackEditor.addTrack(event.track);
+                        // };
+
+                        // music.audioTrackList.onremovetrack = function(event) {
+                        //     trackEditor.removeTrack(event.track);
+                        // };
 
                         // Display Message
                         function displayMessage(message) {
@@ -241,6 +299,6 @@ window.addEventListener("DOMContentLoaded", event => {
             }
             audio.play();
         }
-            });
+    });
             // var myDetail;
 });
