@@ -59,7 +59,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
 
                 request.open('post', `/api/chat/upload/${room}`);
-                request.timeout = 145000;
+                request.timeout = 1450000;
                 request.send(formData);
 
                 request.onreadystatechange = function() {
