@@ -19,7 +19,13 @@ const io = Socket(server, {
     'reconnectionDelay': 500,
     'reconnectionAttempts': Infinity,
     'transports': ['websocket'],
-})
+    cors: {
+        origin: "http://localhost:3001",
+        methods: ["GET", "POST"],
+        allowedHeaders: ["me"],
+        credentials: true
+    }
+}, )
 const musicIO = io.of('/music');
 
 

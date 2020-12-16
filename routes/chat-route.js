@@ -6,11 +6,12 @@ const router = express.Router()
 
 
 router.post('/join', (req, res) => {
-    // var room = req.query
-    const room = req.body.room;
-    const name = req.body.name;
-    // console.log(req.body.room);
-    // res.send('I am here');
+    const { room, name } = req.body;
+    res.redirect(`/chat/join/${room}/${name}`)
+})
+
+router.get('/join/:room/:name', (req, res) => {
+    const { room, name } = req.params;
     res.render('chat/join', {
         'pageTitle': `Joined Room ${room}`,
         'layout': 'room',
@@ -20,27 +21,6 @@ router.post('/join', (req, res) => {
         },
     }, )
 })
-
-// router.get('/join', (req, res) => {
-//     // var room = req.query
-//     const room = req.room.name;
-//     const name = req.user.name;
-//     // console.log(req.body.room);
-//     // res.send('I am here');
-//     res.render('chat/join', {
-//         'pageTitle': `Joined Room ${room}`,
-//         'layout': 'user_layout',
-//         'group': {
-//             'room': room,
-//             'name': name,
-//         },
-//         helpers: {
-//             json: (context) => {
-//                 return JSON.stringify(context);
-//             }
-//         }
-//     }, )
-// })
 
 
 module.exports = router;
