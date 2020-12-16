@@ -6,12 +6,6 @@ const http = require('http')
 const Socket = require('socket.io');
 const session = require('express-session');
 const connection = require('./models/connection');
-// const MongoStore = require('connect-mongo')(session);
-
-// const connectionStore = new MongoStore({
-//     mongooseConnection: connection.mongoose,
-//     collection: 'sessions'
-// })
 
 const fileUpload = require('express-fileupload');
 const initSocketConnections = require('./utils/socket-connections');
@@ -26,6 +20,7 @@ const io = Socket(server, {
     'reconnectionAttempts': Infinity,
     'transports': ['websocket'],
 })
+const musicIO = io.of('/music');
 
 
 app.use((req, res, next) => {
@@ -37,7 +32,14 @@ app.use((req, res, next) => {
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }));
 
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', partialsDir: 'partials' }));
+app.engine('hbs', exphbs({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    partialsDir: [
+        path.join(__dirname, 'views/partials'),
+        path.join(__dirname, 'views/partials/chat'),
+    ]
+}));
 app.set('view engine', 'hbs');
 
 app.use(fileUpload({
@@ -55,12 +57,6 @@ app.use('/api/chat', require('./routes/api/chat-route'))
 app.use('/api/auth', require('./routes/api/auth-route'))
 app.use('/api/user', require('./routes/api/user-route'))
 
-// app.get('/home', (req, res) => {
-//     res.render('index', {
-//         'pageTitle': 'Home'
-//     });
-// })
-
 app.get('/', (req, res) => {
     res.render('index', {
         'pageTitle': 'Home : Group Listening'
@@ -71,4 +67,10 @@ app.get('/', (req, res) => {
 server.listen(port, () => {
     console.log(`Server running on port : ${port}`)
 })
-initSocketConnections(io)
+
+musicIO.use((socket, next) => {
+    // console.log(socket.request)
+    console.log(`${socket.id} connected to the music namespace here with request ${socket.request}`)
+    next();
+})
+initSocketConnections(musicIO)

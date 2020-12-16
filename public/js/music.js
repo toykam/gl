@@ -1,12 +1,11 @@
 window.addEventListener("DOMContentLoaded", event => {
-            // var currentUser = JSON.parse('{{{json group}}}');
-            // console.log(group)
-            const socket = io('/', {
+            const socket = io('/music', {
                 'reconnection': true,
                 'reconnectionDelay': 500,
                 'reconnectionAttempts': Infinity,
                 'transports': ['websocket'],
             });
+
             const chatForm = document.getElementById('chat-form')
             const room = document.getElementById('room-name').innerText;
             const name = document.getElementById('user-name').innerText;
@@ -14,18 +13,14 @@ window.addEventListener("DOMContentLoaded", event => {
             const musicToPlay = document.getElementById('music-to-play')
             const musicUploadForm = document.getElementById('music-upload-form')
             const userInRoom = document.getElementById('users-in-room')
-            const roomName = document.getElementById('room-name')
+                // const roomName = document.getElementById('room-name')
             const playButton = document.getElementById('play-button')
             const pauseButton = document.getElementById('pause-button')
             const stopButton = document.getElementById('stop-button')
             const musicName = document.getElementById('music-name')
-            const musicController = document.getElementById('music-button')
+                // const musicController = document.getElementById('music-button')
             var audio = new Audio('/public/audio/inbox.mp3');
             var music = document.getElementById("music");
-
-            // const { name, room } = Qs.parse(location.search, {
-            //     ignoreQueryPrefix: true
-            // })
 
             musicToPlay.addEventListener('change', (e) => {
                 e.preventDefault();
@@ -56,8 +51,6 @@ window.addEventListener("DOMContentLoaded", event => {
                     }
                 });
 
-
-
                 request.open('post', `/api/chat/upload/${room}`);
                 request.timeout = 1450000;
                 request.send(formData);
@@ -77,25 +70,14 @@ window.addEventListener("DOMContentLoaded", event => {
                 }
             })
 
-            // musicUploadForm.setAttribute('action', `/chat/upload/${room}`)
-
             swal(`Welcome to ${room} Group`).then((value) => {
                         var playPromise = music.play();
                         music.currentTime = 0;
                         playPromise.then(_ => music.pause());
 
-
-
-
-                        // music.onplay
-
-                        // uploader.addEventListener('complete', (fileData) => {
-                        //     console.log(fileData);
-                        //     stopButton.click();
-                        //     socket.emit('music-changed', { fileData });
-                        //     music = new Audio(`/audio/${room}-group/${fileData.file.name}`);
-                        //     tata.text('New Message', 'Upload complete')
-                        // })
+                        socket.on('connection_error', (error) => {
+                            swal('An Error occurred');
+                        })
 
                         socket.on('uploading_music', (message) => {
                             musicName.innerText = `${message}`;
@@ -145,9 +127,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             $('#play-button').hide();
                             $('#pause-button').show();
                             $('#stop-button').show();
-                            // pauseButton.style.display = 'inline';
-                            // stopButton.style.display = 'inline';
-                            // playButton.style.display = 'hidden';
+
                             socket.emit('music_state_changed', {
                                 'state': 'PLAYING',
                                 'current_duration': music.currentTime
@@ -239,6 +219,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         music.addEventListener('timeupdate', (data) => {
                             // console.log(music.paused)
+
                             if (music.paused) {
                                 socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PAUSED' })
                             } else {
@@ -270,15 +251,12 @@ window.addEventListener("DOMContentLoaded", event => {
                             currSec = currSec >= 10 ? currSec : '0' + currSec;
 
                             $("#total_duration").text(min + ":" + sec + ' <==> ' + currMin + ":" + currSec);
+
+                            if (music.duration == music.currentTime) {
+                                stopButton.click();
+                                playButton.click();
+                            }
                         })
-
-                        // music.audioTrackList.onaddtrack = function(event) {
-                        //     trackEditor.addTrack(event.track);
-                        // };
-
-                        // music.audioTrackList.onremovetrack = function(event) {
-                        //     trackEditor.removeTrack(event.track);
-                        // };
 
                         // Display Message
                         function displayMessage(message) {
@@ -298,6 +276,8 @@ window.addEventListener("DOMContentLoaded", event => {
                             userInRoom.innerHTML = '';
                             users.map((user) => {
                                         const div = document.createElement('div');
+                                        div.setAttribute('userId', user.id);
+                                        div.setAttribute('onclick', "switchToAdmin()")
                                         div.classList.add(`chatbox__user--${user.type == 'admin' ? 'active' : 'busy'}`)
                                         div.innerHTML = `<div>
                     <p>${user.name}</p>
@@ -306,13 +286,17 @@ window.addEventListener("DOMContentLoaded", event => {
                 userInRoom.appendChild(div)
             })
         }
-    
+
         function playSound() {
             if (!audio.paused && audio.duration > 0) {
                 audio.currentTime = 0;
                 audio.pause();
             }
             audio.play();
+        }
+
+        function switchToAdmin(e) {
+            alert('clicked')
         }
     });
             // var myDetail;
