@@ -15,13 +15,21 @@ function getRoomUser(room) {
 }
 
 function userLeavesChat(id) {
-    // const index = users.findIndex(user => user.id === id);
     users = users.filter(user => user.id !== id);
+}
+
+function updateUserDetail(userDetail) {
+    users.forEach(user => {
+        if (userDetail.name == user.name) {
+            groups[groups.indexOf(group)] = userDetail;
+        }
+    })
 }
 
 module.exports = {
     userJoin,
     getCurrentUser,
     getRoomUser,
-    userLeavesChat
+    userLeavesChat,
+    updateUserDetail
 }

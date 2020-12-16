@@ -16,12 +16,12 @@ const server = http.createServer(app)
 
 const io = Socket(server, {
     'reconnection': true,
-    'reconnectionDelay': 500,
+    'reconnectionDelay': 100000,
     'reconnectionAttempts': Infinity,
-    'transports': ['websocket'],
+    'transports': ['websocket', 'polling'],
     cors: {
-        origin: "http://localhost:3001",
-        methods: ["GET", "POST"],
+        origin: ["http://localhost:3001", "http://localhost:3001"],
+        methods: ["GET", "POST", "PATCH"],
         allowedHeaders: ["me"],
         credentials: true
     }

@@ -24,8 +24,8 @@ function initSocketConnections(io) {
                 }
                 socket.join(group.name);
                 socket.emit('message', formatMessage(botName, 'Welcome to the Chat Room'));
-                socket.emit('welcome', { group });
-                console.log(group);
+                socket.emit('welcome', { group, user });
+                console.log(user);
                 // Broadcast when a user connects
                 io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
                 socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.name} has join the chat`))
@@ -36,8 +36,17 @@ function initSocketConnections(io) {
 
         })
 
-        socket.on('Admin_changed', (user) => {
-
+        socket.on('Admin_changed', (userToChange) => {
+            var user = getCurrentUser(socket.id);
+            if (user) {
+                if (user.type == 'admin') {
+                    updateUserDetail(user);
+                    updateUserDetail(userToChange);
+                    userToChange.type = 'admin';
+                    user.type = 'listener';
+                    io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
+                }
+            }
         })
 
         // Runs when client disconnet
