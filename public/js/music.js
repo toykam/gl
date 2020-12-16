@@ -277,7 +277,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             users.map((user) => {
                                         const div = document.createElement('div');
                                         div.setAttribute('userId', user.id);
-                                        div.setAttribute('onclick', "switchToAdmin()")
+                                        // div.setAttribute('onclick', "switchToAdmin()")
                                         div.classList.add(`chatbox__user--${user.type == 'admin' ? 'active' : 'busy'}`)
                                         div.innerHTML = `<div>
                     <p>${user.name}</p>
