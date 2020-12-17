@@ -7,7 +7,7 @@ function formatMessage(username, message) {
         message,
         time: moment().format('h:mm a'),
         sender: username,
-        id: uuid.v4()
+        _id: uuid.v4()
     };
 }
 
