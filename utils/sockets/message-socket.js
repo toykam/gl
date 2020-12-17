@@ -22,7 +22,7 @@ module.exports = function initMessageSocketConnection(io, socket) {
             // console.log(user)
         if (user) {
             socket.broadcast.to(user.room).emit('user_is_typing', ``);
-            socket.broadcast.emit('message', formatMessage(`${user.name}`, message.text))
+            io.to(user.room).emit('message', formatMessage(`${user.name}`, message.text))
         }
     })
 }

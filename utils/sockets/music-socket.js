@@ -15,7 +15,7 @@ module.exports = function initMusicSocketConnection(io, socket) {
                 updateGroupDetail(group);
                 console.log(group);
                 console.log(`Music Changed By: ${user.name} file ${fileData.name}`);
-                io.to(user.room).emit('changed-music', fileData);
+                io.to(user.room).emit('changed-music', group);
             }
         }
     })

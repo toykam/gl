@@ -84,13 +84,11 @@ window.addEventListener("DOMContentLoaded", event => {
                         })
 
                         socket.on('changed-music', (fileData) => {
-                            // To Stop The Music
-                            console.log('Music Changed Notification From Server', fileData);
                             stopButton.click();
-                            music.setAttribute('src', `/public/audio/${room}-group/${fileData.name}`);
-                            // music = new Audio(`/audio/${room}-group/${fileData.name}`);
-                            musicName.innerText = `${fileData.name}`;
-                            console.log(music);
+                            music.removeAttribute('src');
+                            // music.setAttribute('src', '');
+                            music.setAttribute('src', `/public/audio/${room}-group/${fileData.musicData.name}`);
+                            musicName.innerText = `${fileData.musicData.name}`;
                         })
 
                         // Join Room
@@ -186,6 +184,7 @@ window.addEventListener("DOMContentLoaded", event => {
                                 console.log(musicData)
                                 music.setAttribute('src', `/public/audio/${room}-group/${musicData.name}`);
                                 music.currentTime = group.group.currentPosition;
+                                musicName.innerText = `${musicData.name}`;
                                 if (group.group.state == 'PLAYING') {
                                     music.play();
                                 }

@@ -22,6 +22,7 @@
         "mongoose": "^5.11.7",
         "nodemon": "^2.0.6",
         "socket.io": "^3.0.4",
-        "socketio-file-upload": "^0.7.2"
+        "socketio-file-upload": "^0.7.2",
+        "uuid": "^8.3.2"
     }
 }
