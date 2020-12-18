@@ -20,7 +20,7 @@ const io = Socket(server, {
     'reconnectionAttempts': Infinity,
     'transports': ['websocket', 'polling'],
     cors: {
-        origin: ["http://localhost:3001", "http://localhost:3000"],
+        origin: ["http://localhost:3001", "http://localhost:3000", "http://group-listening.herokuapp.com/"],
         methods: ["GET", "POST", "PATCH"],
         allowedHeaders: ["me"],
         credentials: true
