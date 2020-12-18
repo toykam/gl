@@ -4,7 +4,7 @@ const uuid = require('uuid')
 function formatMessage(user, message) {
     return {
         text: message,
-        created_at: moment().format('h:mm a'),
+        createdAt: moment().format('h:mm a'),
         sender: user.name,
         _id: uuid.v4(),
         user: {
