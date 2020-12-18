@@ -23,12 +23,12 @@ function initSocketConnections(io) {
                     user = userJoin(name, room, socket.id, 'listener');
                 }
                 socket.join(group.name);
-                socket.emit('message', formatMessage(botName, 'Welcome to the Chat Room'));
+                socket.emit('message', formatMessage({name: botName, _id: 'bot'}, 'Welcome to the Chat Room'));
                 socket.emit('welcome', { group, user });
                 console.log(user);
                 // Broadcast when a user connects
                 io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-                socket.broadcast.to(user.room).emit('message', formatMessage(botName, `${user.name} has join the chat`))
+                socket.broadcast.to(user.room).emit('message', formatMessage({name: botName, _id: 'bot'}, `${user.name} has join the chat`))
                 console.log('new websocket connection')
             } catch (error) {
                 console.log('JoinRoomError: ', error);
@@ -64,7 +64,7 @@ function initSocketConnections(io) {
                         deleteGroup(user.room);
                     }
                     io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-                    io.to(user.room).emit('message', formatMessage(botName, `${user.name} has left the chat`))
+                    io.to(user.room).emit('message', formatMessage({name: botName, _id: 'bot'}, `${user.name} has left the chat`))
                 }
             } catch (error) {
                 console.log('Disconnect Error: ', error)

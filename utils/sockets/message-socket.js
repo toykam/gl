@@ -19,7 +19,6 @@ module.exports = function initMessageSocketConnection(io, socket) {
     // Listen for chat message
     socket.on('chatMessage', (message) => {
         const user = getCurrentUser(socket.id)
-            // console.log(user)
         if (user) {
             socket.broadcast.to(user.room).emit('user_is_typing', ``);
             io.to(user.room).emit('message', formatMessage(user, message.text))
