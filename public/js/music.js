@@ -191,7 +191,6 @@ window.addEventListener("DOMContentLoaded", event => {
                             }
                         })
 
-
                         // Submit Message
                         chatForm.addEventListener('submit', (e) => {
                             e.preventDefault();
@@ -204,14 +203,6 @@ window.addEventListener("DOMContentLoaded", event => {
                                     'text': message.value,
                                 });
                                 socket.emit('message', message.text)
-                                //     // Clear input field
-                                // var today = new Date();
-                                // var time = today.getHours() + ":" + today.getMinutes();
-                                // displayMessage({
-                                //     username: name,
-                                //     message: message.value,
-                                //     time
-                                // })
                                 message.value = '';
                             }
                         })
