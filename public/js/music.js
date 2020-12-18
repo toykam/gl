@@ -102,7 +102,7 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         socket.on('message', (message) => {
                             playSound();
-                            tata.text(`New message from ${message.username}`, `${message.message}`)
+                            tata.text(`New message from ${message.user.name}`, `${message.text}`)
                             displayMessage(message)
                         })
 
@@ -262,9 +262,9 @@ window.addEventListener("DOMContentLoaded", event => {
                             const div = document.createElement('div');
                             div.classList.add('chatbox__messages__user-message')
                             div.innerHTML = `<div class="chatbox__messages__user-message--ind-message">
-                <p class="name">${message.username} : ${message.time}</p>
+                <p class="name">${message.user.name} : ${message.createdAt}</p>
                 <br/>
-                <p class="message">${message.message}</p>
+                <p class="message">${message.text}</p>
             </div>`;
                             chatMessages.appendChild(div)
 
