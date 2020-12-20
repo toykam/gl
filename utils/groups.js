@@ -15,7 +15,8 @@ function createGroup(name, id, currentPosition, musicData, state) {
         id,
         currentPosition,
         musicData,
-        state
+        state,
+        musics: []
     };
     groups.push(group);
     return group;

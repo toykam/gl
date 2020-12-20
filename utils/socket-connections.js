@@ -10,6 +10,7 @@ function initSocketConnections(io) {
     io.on('connection', (socket) => {
         initMusicSocketConnection(io, socket);
         initMessageSocketConnection(io, socket);
+        initGroupSocketConnection(io, socket);
         socket.on('JoinRoom', ({ name, room }) => {
             try {
                 const users = getRoomUser(room);
@@ -65,7 +66,7 @@ function initSocketConnections(io) {
                         deleteGroup(user.room);
                     }
                     io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-                    io.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `${user.name} wants to leave chat`))
+                    io.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `${user.name} leave chat`))
                 }
                 // socket.connect();
                 // console.log(socket);
