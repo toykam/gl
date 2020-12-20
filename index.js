@@ -16,7 +16,7 @@ const server = http.createServer(app)
 
 const io = Socket(server, {
     'reconnection': true,
-    'reconnectionDelay': 100000,
+    'reconnectionDelay': 1,
     'reconnectionAttempts': Infinity,
     'transports': ['websocket', 'polling'],
     cors: {

@@ -28,6 +28,7 @@ module.exports = function initMusicSocketConnection(io, socket) {
                 group.currentPosition = data.time;
                 group.state = data.state;
                 updateGroupDetail(group);
+                socket.broadcast.to(user.room).emit('music-current-time-changed', {time: data.time, state: data.state})
             }
         }
     })
@@ -43,6 +44,15 @@ module.exports = function initMusicSocketConnection(io, socket) {
         if (user) {
             if (user.type == 'admin') {
                 socket.broadcast.to(user.room).emit('music_state_changed', data)
+            }
+        }
+    })
+
+    socket.on('music-source-changed', (data) => {
+        var user = getCurrentUser(socket.id);
+        if (user) {
+            if (user.type == 'admin') {
+                socket.broadcast.to(user.room).emit('music-source-changed', data)
             }
         }
     })
