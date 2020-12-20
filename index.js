@@ -6,6 +6,8 @@ const http = require('http')
 const Socket = require('socket.io');
 const session = require('express-session');
 const connection = require('./models/connection');
+// Enable cors
+var cors = require('cors')
 
 const fileUpload = require('express-fileupload');
 const initSocketConnections = require('./utils/socket-connections');
@@ -28,7 +30,13 @@ const io = Socket(server, {
 }, )
 const musicIO = io.of('/music');
 
+// Cors Options
+var corsOptions = {
+    origin: 'http://localhost:3001',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
+app.use(cors(corsOptions))
 app.use((req, res, next) => {
     req.user = null;
     next();
