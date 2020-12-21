@@ -1,7 +1,7 @@
 window.addEventListener("DOMContentLoaded", event => {
             const socket = io('/music', {
                 'reconnection': true,
-                'reconnectionDelay': 500,
+                'reconnectionDelay': 1,
                 'reconnectionAttempts': Infinity,
                 'transports': ['websocket'],
             });
