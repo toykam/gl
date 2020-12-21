@@ -1,10 +1,10 @@
 const formatMessage = require('./message.model');
-const { userJoin, getCurrentUser, userLeavesChat, getRoomUser } = require('./users');
+const { userJoin, getCurrentUser, userLeavesChat, getRoomUser, updateUserDetail } = require('./users');
 const { createGroup, getGroupDetail, updateGroupDetail, deleteGroup } = require('./groups');
 const initMusicSocketConnection = require('./sockets/music-socket');
 const initGroupSocketConnection = require('./sockets/group-socket');
 const initMessageSocketConnection = require('./sockets/message-socket');
-const botName = 'Chat Bot';
+const { botName } = require('./constants');
 
 function initSocketConnections(io) {
     io.on('connection', (socket) => {
@@ -46,6 +46,7 @@ function initSocketConnections(io) {
                     userToChange.type = 'admin';
                     user.type = 'listener';
                     io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
+                    io.to(user.room).emit('message', formatMessage(botName, `Admin have been switched to ${userToChange.name}`))
                 }
             }
         })

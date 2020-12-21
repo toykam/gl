@@ -21,7 +21,7 @@ function userLeavesChat(id) {
 function updateUserDetail(userDetail) {
     users.forEach(user => {
         if (userDetail.name == user.name) {
-            groups[groups.indexOf(group)] = userDetail;
+            users[users.indexOf(user)] = userDetail;
         }
     })
 }
