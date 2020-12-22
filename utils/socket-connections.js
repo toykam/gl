@@ -15,7 +15,7 @@ function initSocketConnections(io) {
         // Runs when client disconnet
         socket.on('disconnect', () => {
             try {
-                socket.connect();
+                // socket.connect();
                 // socket.reconnect();
                 const user = getCurrentUser(socket.id)
                 userLeavesChat(socket.id);
