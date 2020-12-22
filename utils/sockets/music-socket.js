@@ -6,16 +6,19 @@ module.exports = function initMusicSocketConnection(io, socket) {
     socket.on('music-changed', (fileData) => {
         const user = getCurrentUser(socket.id);
         if (user) {
+            // Get Group Detail
+            const group = getGroupDetail(user.room);
+            
+            // Set Group Music Data
+            group.musicData = fileData;
+            console.log(group);
             if (user.type == 'admin') {
-                // Get Group Detail
-                const group = getGroupDetail(user.room);
-                // Set Group Music Data
-                group.musicData = fileData;
                 // Update Group Data
                 updateGroupDetail(group);
-                console.log(group);
-                console.log(`Music Changed By: ${user.name} file ${fileData.name}`);
+                
                 io.to(user.room).emit('changed-music', group);
+            } else {
+                io.to(user.id).emit('changed-music', group);
             }
         }
     })

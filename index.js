@@ -83,7 +83,6 @@ server.listen(port, () => {
 })
 
 musicIO.use((socket, next) => {
-    // console.log(socket.request)
     console.log(`${socket.id} connected to the music namespace here with request ${socket.request}`)
     next();
 })
