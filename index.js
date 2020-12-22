@@ -32,7 +32,7 @@ const io = Socket(server, {
         allowedHeaders: ["me"],
         credentials: true
     }
-}, )
+},)
 const musicIO = io.of('/music');
 
 // Cors Options

@@ -5,7 +5,6 @@ module.exports = function initMessageSocketConnection(io, socket) {
 
     // Listen to music change
     socket.on('typing', (message) => {
-        
         const user = getCurrentUser(socket.id);
         if (user) {
             if (message.length > 0) {
