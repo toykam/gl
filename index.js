@@ -20,9 +20,10 @@ const io = Socket(server, {
     'reconnection': true,
     'reconnectionDelay': 1,
     'reconnectionAttempts': Infinity,
-    'transports': ['websocket', 'polling'],
-    'pingInterval': 10000,
-    'pingTimeout': 5000,
+    'transports': ['websocket'],
+    'pingInterval': 50,
+    'pingTimeout': 500000,
+    'upgradeTimeout': 30000,
     cors: {
         origin: ["http://localhost:3001", "http://localhost:3000", "https://group-listening.herokuapp.com"],
         methods: ["GET", "POST", "PATCH"],
