@@ -20,7 +20,7 @@ const io = Socket(server, {
     'reconnection': true,
     'reconnectionDelay': 1,
     'reconnectionAttempts': Infinity,
-    'transports': ['websocket'],
+    'transports': ['websocket', 'polling'],
     'pingInterval': 50,
     'pingTimeout': 500000,
     'upgradeTimeout': 30000,
