@@ -15,23 +15,23 @@ function initSocketConnections(io) {
         // Runs when client disconnet
         socket.on('disconnect', () => {
             try {
-                // socket.reconnect();
-                // const user = getCurrentUser(socket.id)
-                // userLeavesChat(socket.id);
-                // if (user) {
-                //     console.log(`${user.name} Socket Wants to Disconnect`)
-                //     var users = getRoomUser(user.room);
-                //     if (users.length > 0) {
-                //         users[0]['type'] = 'admin';
-                //     }
-                //     if (users.length == 0) {
-                //         deleteGroup(user.room);
-                //     }
-                //     io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-                //     io.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `${user.name} leave chat`))
-                // }
                 socket.connect();
-                // console.log(socket);
+                // socket.reconnect();
+                const user = getCurrentUser(socket.id)
+                userLeavesChat(socket.id);
+                if (user) {
+                    console.log(`${user.name} Socket Wants to Disconnect`)
+                    var users = getRoomUser(user.room);
+                    if (users.length > 0) {
+                        users[0]['type'] = 'admin';
+                    }
+                    if (users.length == 0) {
+                        deleteGroup(user.room);
+                    }
+                    io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
+                    io.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `${user.name} leave chat`))
+                }
+                console.log(socket);
             } catch (error) {
                 console.log('Disconnect Error: ', error)
             }
