@@ -17,13 +17,15 @@ const port = process.env.PORT || 3000;
 const server = http.createServer(app)
 
 const io = Socket(server, {
-    'reconnection': true,
-    'reconnectionDelay': 1,
-    'reconnectionAttempts': Infinity,
-    'transports': ['websocket', 'polling'],
-    'pingInterval': 50,
-    'pingTimeout': 500000,
-    'upgradeTimeout': 30000,
+    serveClient: true,
+    reconnection: true,
+    reconnectionDelayMax: 5000,
+    reconnectionDelay: 1000,
+    reconnectionAttempts: Infinity,
+    transports: ['websocket', 'polling'],
+    pingInterval: 25000,
+    pingTimeout: 30000,
+    upgradeTimeout: 20000,
     cors: {
         origin: ["http://localhost:3001", "http://localhost:3000", "https://group-listening.herokuapp.com"],
         methods: ["GET", "POST", "PATCH"],

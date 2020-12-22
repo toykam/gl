@@ -8,6 +8,9 @@ const { botName } = require('./constants');
 
 function initSocketConnections(io) {
     io.on('connection', (socket) => {
+
+        socket.on("heartbeat", function (data) { console.log("socket is outside ", data, socket.id); });
+
         initMusicSocketConnection(io, socket);
         initMessageSocketConnection(io, socket);
         initGroupSocketConnection(io, socket);
