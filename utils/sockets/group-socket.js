@@ -82,7 +82,7 @@ module.exports = function initGroupSocketConnection(io, socket) {
                 userToChange.type = 'admin';
                 user.type = 'listener';
                 io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
-                io.to(user.room).emit('message', formatMessage(botName, `Admin have been switched to ${userToChange.name}`))
+                io.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `Admin have been switched to ${userToChange.name}`))
             }
         }
     })
