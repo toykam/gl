@@ -37,7 +37,8 @@ module.exports = function initGroupSocketConnection(io, socket) {
             socket.join(group.name);
             socket.emit('message', formatMessage({name: botName, id: 'bot-id'}, 'Welcome to the Chat Room'));
             socket.emit('welcome', { group, user });
-            console.log(user);
+            socket.emit('welcome_music', { group, user });
+            // console.log(user);
             // Broadcast when a user connects
             io.to(user.room).emit('UserListChanged', getRoomUser(user.room))
             socket.broadcast.to(user.room).emit('message', formatMessage({name: botName, id: 'bot-id'}, `${user.name} has join the chat`))
