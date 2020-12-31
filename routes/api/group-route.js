@@ -3,11 +3,10 @@ const { Group } = require('../../models/connection');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        // var uid = req.head
         var groups = await Group.find({'type': 'public'})
-        console.log(groups)
+        // console.log(groups)
         res.json({
             status: true,
             data: {groups}
@@ -19,6 +18,8 @@ router.get('/', (req, res) => {
         })
     }
 })
+
+
 router.get('/:id', (req, res) => {
     res.render('auth/register', {
         'pageTitle': 'Register'

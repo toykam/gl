@@ -97,6 +97,7 @@ app.use('/group', require('./routes/group-route'))
 app.use('/api/chat', require('./routes/api/chat-route'))
 app.use('/api/auth', require('./routes/api/auth-route'))
 app.use('/api/user', require('./routes/api/user-route'))
+app.use('/api/group', require('./routes/api/group-route'))
 
 app.get('/', (req, res) => {
     res.render('index', {
