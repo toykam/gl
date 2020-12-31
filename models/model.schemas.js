@@ -15,8 +15,8 @@ const UserSchema = new mongoose.Schema({
     imageUrl: { type: String, default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Youth_Group_2005.jpg/220px-Youth_Group_2005.jpg' },
     userType: { type: String, default: 'basic' },
     playList: { type: [MusicDataSchema], default: [] },
-    joinedAt: { type: Date, },
-    updatedAt: { type: Date, }
+    joinedAt: { type: Date, default: Date.now()},
+    updatedAt: { type: Date, default: Date.now()}
 })
 
 const GroupMemberSchema = new mongoose.Schema({

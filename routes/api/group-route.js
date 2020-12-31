@@ -20,10 +20,21 @@ router.get('/', async (req, res) => {
 })
 
 
-router.get('/:id', (req, res) => {
-    res.render('auth/register', {
-        'pageTitle': 'Register'
-    })
+router.get('/:id', async(req, res) => {
+    try {
+        // console.log(req.params.id);
+        var group = await Group.find({'_id': req.params.id})
+        // console.log(groups)
+        res.json({
+            status: true,
+            data: {group}
+        })
+    } catch(error) {
+        res.json({
+            status: false,
+            msg: error
+        })
+    }
 })
 
 module.exports = router;
