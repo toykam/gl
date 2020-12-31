@@ -1,0 +1,93 @@
+<form>
+    <div class="ui modal createGroupModal" id="createGroupModal">
+        <i class="close icon"></i>
+        <div class="header">
+            Create Group
+        </div>
+        <div class="image content">
+            <div class="ui medium image">
+            <img src="/images/avatar/large/chris.jpg">
+            </div>
+            <div class="description">
+                <div class="ui form">
+                    <div class="fields">
+                        <div class="field">
+                            <label>Group name</label>
+                            <input type="text" placeholder="First Name">
+                        </div>
+                        {{!-- <div class="field">
+                            <label>Middle name</label>
+                            <input type="text" placeholder="Middle Name">
+                        </div>
+                        <div class="field">
+                            <label>Last name</label>
+                            <input type="text" placeholder="Last Name">
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui deny button negative">
+                Cancel
+            </div>
+            <button class="ui positive right labeled icon button">
+                Create group
+                <i class="checkmark icon"></i>
+            </button>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    $(document).ready(() => {
+        $("#createGroupButton").click(() => {
+            // $("#createGroupModal").modal('show')
+            swal({
+                text: 'Enter group name. e.g. "School FC".',
+                content: "input",
+                button: {
+                    text: "Create group",
+                    closeModal: false,
+                },
+                })
+                .then(name => {
+                if (!name) throw null;
+                console.log(name)
+                var formData = new FormData();
+                formData.append('name', name)
+                return fetch(`/api/user/group`, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'user_id': '5fd73667093930269c66c8ce'
+                    }
+                });
+                })
+                .then(results => results.json())
+                .then(json => {
+                    console.log(json)
+                    if (json.status == true) {
+                        swal({
+                            title: "Success",
+                            text: json.msg,
+                        }).then(_ => {
+                            window.location.assign(json.redirect)
+                        });
+                    } else {
+                        swal("Oh noes!", `${json.msg}`, "error");
+                    }
+                    
+                })
+                .catch(err => {
+                if (err) {
+                    swal("Oh noes!", "unable to create group", "error");
+                } else {
+                    swal.stopLoading();
+                    swal.close();
+                }
+            });
+        })
+    })
+</script>

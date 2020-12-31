@@ -1,0 +1,15 @@
+<div class="four wide column">
+    <div class="card">
+        <div class="header">{{ group.name }}</div>
+        <div class="meta">{{ length group.members }} members</div>
+        <div class="image">
+            <img src="{{ group.imageUrl }}">
+        </div>
+        
+        <div class="ui icon buttons">
+            <button class="ui positive button ViewGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="eye icon"></i></button>
+            <button class="ui blue button EditGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="edit icon"></i></button>
+            <button class="ui negative button DeleteGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="trash icon"></i></button>
+        </div>
+    </div>
+</div>

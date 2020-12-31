@@ -47,7 +47,9 @@
         $.post('/api/auth/login', {'email':email, 'password':password}, (res) => {
             // console.log(res);
             if (res.status == true) {
-                swal(`${res.message}`);
+                swal(`${res.message}`).then(val => {
+                    window.location.assign(res.redirect);
+                });
                 msgDiv.innerHTML = `<p class='ui positive'>${res.message}</p>`;
             } else {
                 swal(`${res.message}`);

@@ -9,8 +9,31 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" href="/public/css/semantic-style.css">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw==" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="ui container fluid" style="padding: 10px 20px 0px 20px;">
+    <div class="ui secondary  menu">
+        <a class="active item" href="/user">
+            Dashboard
+        </a>
+        <a class="item" href="/user/groups">
+            Groups
+        </a>
+        <a class="item">
+            Friends
+        </a>
+        <div class="right menu">
+            <div class="item">
+            <div class="ui icon input">
+                <input type="text" placeholder="Search...">
+                <i class="search link icon"></i>
+            </div>
+            </div>
+            <a class="ui item">
+            Logout
+            </a>
+        </div>
+    </div>
     {{{ body }}}
 </body>
 </html>

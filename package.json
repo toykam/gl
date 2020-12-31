@@ -21,6 +21,7 @@
         "express-session": "^1.17.1",
         "moment": "^2.29.1",
         "mongoose": "^5.11.7",
+        "node-localstorage": "^2.1.6",
         "nodemon": "^2.0.6",
         "socket.io": "^3.0.4",
         "socketio-file-upload": "^0.7.2",

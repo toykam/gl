@@ -11,6 +11,8 @@ var cors = require('cors')
 
 const fileUpload = require('express-fileupload');
 const initSocketConnections = require('./utils/socket-connections');
+const myLocalStorage = require('./utils/localStorage');
+const { USERDATAKEY } = require('./utils/constants');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -37,20 +39,17 @@ const musicIO = io.of('/music');
 
 // Cors Options
 var corsOptions = {
-    // origin: ['http://localhost:3001', 'https://group-listening.herokuapp.com', 'http://localhost:3001'],
+    // origin: ['http://localhost:3001', 'https://group-listening.herokuapp.com', 'http://localhost:3000',],
     origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
 app.use(cors(corsOptions))
-app.use((req, res, next) => {
-    req.user = null;
-    next();
-})
 
 // Set Static File to be served
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.engine('hbs', exphbs({
     defaultLayout: 'main',
@@ -58,13 +57,35 @@ app.engine('hbs', exphbs({
     partialsDir: [
         path.join(__dirname, 'views/partials'),
         path.join(__dirname, 'views/partials/chat'),
-    ]
+        path.join(__dirname, 'views/partials/user'),
+    ],
+    helpers: require('./utils/handle-bars.helpers'),
 }));
 app.set('view engine', 'hbs');
 
 app.use(fileUpload({
     createParentPath: true,
 }));
+
+
+// app.use((req, res, next) => {
+//     next();
+// })
+
+app.use('/user', async(req, res, next) => {
+    try {
+        var uid = myLocalStorage.getItem(USERDATAKEY)
+        if (uid) {
+            var user = await connection.User.find({'_id': uid});
+            req.user = user;
+            next();
+        } else {
+            res.redirect('/auth/login')
+        }
+    } catch (error) {
+        res.redirect('/auth/login')
+    }
+})
 
 // Page ROutes
 app.use('/chat', require('./routes/chat-route'))
@@ -82,7 +103,6 @@ app.get('/', (req, res) => {
         'pageTitle': 'Home : Group Listening'
     });
 })
-
 
 server.listen(port, () => {
     console.log(`Server running on port : ${port}`)

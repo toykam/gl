@@ -54,7 +54,15 @@ module.exports = function initMusicSocketConnection(io, socket) {
     socket.on('music-source-changed', (data) => {
         var user = getCurrentUser(socket.id);
         if (user) {
+            
+            console.log(group);
             if (user.type == 'admin') {
+                // Get Group Detail
+                const group = getGroupDetail(user.room);
+                
+                // Set Group Music Data
+                group.musicData = data;
+                updateGroupDetail(group);
                 socket.broadcast.to(user.room).emit('music-source-changed', data)
             }
         }

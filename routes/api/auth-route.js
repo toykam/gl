@@ -1,5 +1,7 @@
 const express = require('express');
+const { USERDATAKEY, USERLOGGEDINKEY } = require('../../utils/constants');
 const { hashPassword, verifyPassword } = require('../../utils/functions');
+const myLocalStorage = require('../../utils/localStorage');
 const User = require('./../../models/user.model')
 const router = express.Router();
 
@@ -9,7 +11,9 @@ router.post('/login', async(req, res) => {
         if (user) {
             var verified = await verifyPassword(req.body.password, user.password);
             if (verified) {
-                res.json({ 'status': true, 'message': 'User login successful', 'data': user })
+                myLocalStorage.setItem(USERDATAKEY, user.get('_id'));
+                myLocalStorage.setItem(USERLOGGEDINKEY, true);
+                res.json({ 'status': true, 'message': 'User login successful', 'data': user, 'redirect': '/user' })
             } else {
                 res.json({ 'status': false, 'message': 'Login detail not correct' })
             }

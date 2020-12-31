@@ -1,0 +1,43 @@
+<div class="ui container">
+    <h1>Groups</h1>
+    <button class="ui button tiny positive" id="createGroupButton">Create a group</button>
+
+    {{#if (ifEquals groupLength 0) }}
+        <div class="ui center aligned container">
+            <p>This place looks empty</p>
+            <p>Want to see how beautiful it will look with some groups?</p>
+            <button class="ui button tiny positive" id="createGroupButton">Create a group</button>
+        </div>
+    {{/if}}
+
+
+    <div class="ui eight column centered grid">
+        {{#each groups as | group | }}
+            {{> one_group group=group }}
+        {{/each}}
+    </div>
+</div>
+
+
+
+{{> create_group }}
+
+
+<script>
+    $(document).ready(() => {
+        $(".ViewGroup").click(e => {
+            console.log(e.target.attributes.group_id.value)
+        })
+
+        $(".EditGroup").click(e => {
+            console.log(e.target.attributes.group_id.value)
+        })
+
+        $(".DeleteGroup").click(e => {
+            var groupId = e.target.attributes.group_id.value;
+            swal("Are you sure you want to do this?", {
+                buttons: ["Oh noez!", "Aww yiss!"],
+            })
+        })
+    })
+</script>
