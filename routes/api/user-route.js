@@ -75,4 +75,46 @@ router.post('/group/:id', async(req, res) => {
     }
 })
 
+router.post('/group/publish/:id', async(req, res) => {
+    try {
+        // console.log(req.params.id);
+        var uid = req.header('user_id')
+        
+        var groupMember = new GroupMemberModel();
+        // GroupMember
+        groupMember.user = await User.findOne({'_id': uid}, 'name username _id imageUrl userType').exec();
+        groupMember.type = 'admin'
+
+        Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': true, members: [groupMember]}, {upsert: true}, () => {
+            res.json({
+                status: true,
+                msg: 'Group published'
+            })
+        })
+    } catch(error) {
+        res.json({
+            status: false,
+            msg: error
+        })
+    }
+})
+
+router.post('/group/unpublish/:id', async(req, res) => {
+    try {
+        // console.log(req.params.id);
+        var uid = req.header('user_id')
+        Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': false, members: []}, {upsert: true}, () => {
+            res.json({
+                status: true,
+                msg: 'Group unpublished'
+            })
+        })
+    } catch(error) {
+        res.json({
+            status: false,
+            msg: error
+        })
+    }
+})
+
 module.exports = router;
