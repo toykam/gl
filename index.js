@@ -37,7 +37,8 @@ const musicIO = io.of('/music');
 
 // Cors Options
 var corsOptions = {
-    origin: ['http://localhost:3001', 'https://group-listening.herokuapp.com', 'http://localhost:3001'],
+    // origin: ['http://localhost:3001', 'https://group-listening.herokuapp.com', 'http://localhost:3001'],
+    origin: '*',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
 
