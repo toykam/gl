@@ -7,9 +7,9 @@ const myLocalStorage = require('../../utils/localStorage');
 
 const router = express.Router();
 
-router.post('/create', async(req, res) => {
+// router.post('/create', async(req, res) => {
 
-})
+// })
 
 router.post('/group', async (req, res) => {
     console.log(req.body)
@@ -47,6 +47,25 @@ router.get('/group', async (req, res) => {
         res.json({
             status: true,
             data: {groups}
+        })
+    } catch(error) {
+        res.json({
+            status: false,
+            msg: error
+        })
+    }
+})
+
+router.post('/group/:id', async(req, res) => {
+    try {
+        // console.log(req.params.id);
+        var uid = req.header('user_id')
+        var group = await Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, req.body, {upsert: true})
+        
+        res.json({
+            status: true,
+            data: {group},
+            msg: 'Group updated'
         })
     } catch(error) {
         res.json({

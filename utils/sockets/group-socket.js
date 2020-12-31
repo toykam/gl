@@ -88,4 +88,8 @@ module.exports = function initGroupSocketConnection(io, socket) {
             }
         }
     })
+
+    socket.on('PublishGroup', ({name}) => {
+        io.emit('PublishGroup', {name})
+    })
 }

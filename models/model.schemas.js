@@ -33,6 +33,7 @@ const GroupSchema = new mongoose.Schema({
     imageUrl: { type: String, default: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Youth_Group_2005.jpg/220px-Youth_Group_2005.jpg' },
     max_member: { type: Number, default: 5 },
     strict: { type: Boolean, default: false },
+    published: { type: Boolean, default: false },
     type: {type: String, default: 'public' },
     musics: { type: [MusicDataSchema], default: null },
     musicData: { type: MusicDataSchema, default: null },
