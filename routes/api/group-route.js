@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        var groups = await Group.find({'type': 'public'})
+        var groups = await Group.find({'type': 'public', 'published': true})
         // console.log(groups)
         res.json({
             status: true,

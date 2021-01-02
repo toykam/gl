@@ -7,9 +7,6 @@ const myLocalStorage = require('../../utils/localStorage');
 
 const router = express.Router();
 
-// router.post('/create', async(req, res) => {
-
-// })
 
 router.post('/group', async (req, res) => {
     console.log(req.body)
@@ -17,19 +14,25 @@ router.post('/group', async (req, res) => {
         // var uid = myLocalStorage.getItem(USERDATAKEY);
         var uid = req.header('user_id')
         if (uid) {
-            var group = new Group();
-            var groupMember = new GroupMemberModel();
-            // GroupMember
-            groupMember.user = await User.findOne({'_id': uid})
-            groupMember.type = 'admin'
+            var user = await User.findOne({'_id': uid})
+            if (user) {
 
-            group.name = req.body.name;
-            group.owner_id = uid;
-            group.members = [groupMember]
-            if (group.save()) {
-                res.json({status: true, msg: 'Group created successfully', redirect: '/user/groups'})
+                var group = new Group();
+                var groupMember = new GroupMemberModel();
+                // GroupMember
+                groupMember.user = user
+                groupMember.type = 'admin'
+    
+                group.name = req.body.name;
+                group.owner_id = uid;
+                group.members = [groupMember]
+                if (group.save()) {
+                    res.json({status: true, msg: 'Group created successfully', redirect: '/user/groups'})
+                } else {
+                    res.json({status: false, msg: 'Unable to create group', redirect: ''})
+                }
             } else {
-                res.json({status: false, msg: 'Unable to create group', redirect: ''})
+                res.json({status: false, msg: 'Access denied, login required', redirect: ''})
             }
         } else {
             res.json({status: false, msg: 'session expired', redirect: '/auth/login'})
