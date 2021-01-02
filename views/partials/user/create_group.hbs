@@ -71,12 +71,12 @@
                     if (json.status == true) {
                         swal({
                             title: "Success",
-                            text: json.msg,
+                            text: json.message,
                         }).then(_ => {
                             window.location.assign(json.redirect)
                         });
                     } else {
-                        swal("Oh noes!", `${json.msg}`, "error");
+                        swal("Oh noes!", `${json.message}`, "error");
                     }
                     
                 })

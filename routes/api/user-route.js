@@ -22,23 +22,24 @@ router.post('/group', async (req, res) => {
                 // GroupMember
                 groupMember.user = user
                 groupMember.type = 'admin'
+                // if (req.body.name)
     
                 group.name = req.body.name;
                 group.owner_id = uid;
                 group.members = [groupMember]
                 if (group.save()) {
-                    res.json({status: true, msg: 'Group created successfully', redirect: '/user/groups'})
+                    res.json({status: true, message: 'Group created successfully', redirect: '/user/groups'})
                 } else {
-                    res.json({status: false, msg: 'Unable to create group', redirect: ''})
+                    res.json({status: false, message: 'Unable to create group', redirect: ''})
                 }
             } else {
-                res.json({status: false, msg: 'Access denied, login required', redirect: ''})
+                res.json({status: false, message: 'Access denied, login required', redirect: ''})
             }
         } else {
-            res.json({status: false, msg: 'session expired', redirect: '/auth/login'})
+            res.json({status: false, message: 'session expired', redirect: '/auth/login'})
         }
     } catch (error) {
-        res.json({status: false, msg: `${error}`, redirect: '/auth/login'})
+        res.json({status: false, message: `${error}`, redirect: '/auth/login'})
     }
 })
 
@@ -54,7 +55,7 @@ router.get('/group', async (req, res) => {
     } catch(error) {
         res.json({
             status: false,
-            msg: error
+            message: error
         })
     }
 })
@@ -68,12 +69,12 @@ router.post('/group/:id', async(req, res) => {
         res.json({
             status: true,
             data: {group},
-            msg: 'Group updated'
+            message: 'Group updated'
         })
     } catch(error) {
         res.json({
             status: false,
-            msg: error
+            message: error
         })
     }
 })
@@ -91,13 +92,13 @@ router.post('/group/publish/:id', async(req, res) => {
         Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': true, members: [groupMember]}, {upsert: true}, () => {
             res.json({
                 status: true,
-                msg: 'Group published'
+                message: 'Group published'
             })
         })
     } catch(error) {
         res.json({
             status: false,
-            msg: error
+            message: error
         })
     }
 })
@@ -109,13 +110,13 @@ router.post('/group/unpublish/:id', async(req, res) => {
         Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': false, members: []}, {upsert: true}, () => {
             res.json({
                 status: true,
-                msg: 'Group unpublished'
+                message: 'Group unpublished'
             })
         })
     } catch(error) {
         res.json({
             status: false,
-            msg: error
+            message: error
         })
     }
 })
