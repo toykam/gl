@@ -1,5 +1,11 @@
 <div class="four wide column">
     <div class="card">
+        {{#if group.published }}
+            <a class="ui red ribbon label">PUBLISHED</a>
+        {{/if}}
+        {{#if (ifEquals group.published false) }}
+            <a class="ui red ribbon label">NOT PUBLISHED</a>
+        {{/if}}
         <div class="header">{{ group.name }}</div>
         <div class="meta">{{ length group.members }} members</div>
         <div class="image">
@@ -9,6 +15,7 @@
         <div class="ui icon buttons">
             <button class="ui positive button ViewGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="eye icon"></i></button>
             <button class="ui blue button EditGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="edit icon"></i></button>
+            <button class="ui orange button PublishGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="open icon"></i></button>
             <button class="ui negative button DeleteGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="trash icon"></i></button>
         </div>
     </div>

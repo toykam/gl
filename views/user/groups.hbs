@@ -33,6 +33,13 @@
             console.log(e.target.attributes.group_id.value)
         })
 
+        $(".PublishGroup").click(e => {
+            console.log(e.target.attributes.group_id.value)
+            swal("Do you want to publish this group?", {
+                buttons: ["Not Yet!", "Absolutely"],
+            })
+        })
+
         $(".DeleteGroup").click(e => {
             var groupId = e.target.attributes.group_id.value;
             swal("Are you sure you want to do this?", {
