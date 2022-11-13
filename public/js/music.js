@@ -1,4 +1,7 @@
 window.addEventListener("DOMContentLoaded", event => {
+            var userData = localStorage.getItem('userData');
+            userData = JSON.parse(userData);
+            console.log("UserDataFromMusic.js ::: ", userData);
             const socket = io('/music', {
                 'reconnection': true,
                 'reconnectionDelay': 1,
@@ -7,8 +10,10 @@ window.addEventListener("DOMContentLoaded", event => {
             });
 
             const chatForm = document.getElementById('chat-form')
+            const leaveButton = document.getElementById('LeaveRoom')
             const room = document.getElementById('room-name').innerText;
-            const name = document.getElementById('user-name').innerText;
+            const roomName = document.getElementById('room-name-name').innerText;
+            const name = userData['id'];
             const chatMessages = document.getElementById('messages')
             const musicToPlay = document.getElementById('music-to-play')
             const musicUploadForm = document.getElementById('music-upload-form')
@@ -43,7 +48,10 @@ window.addEventListener("DOMContentLoaded", event => {
                     if (e.loaded <= file1Size) {
                         var percent = Math.round(e.loaded / file1Size * 100);
                         $('#music-name').html(`Upload progress: ${percent} %`);
-                        socket.emit('uploading_music', `Music Upload progress: ${percent} %`);
+                        socket.emit('uploading_music', {
+                            'message':`Music Upload progress: ${percent} %`,
+                            'gid': room
+                        });
                     }
 
                     if (e.loaded == e.total) {
@@ -60,7 +68,11 @@ window.addEventListener("DOMContentLoaded", event => {
                         var res = JSON.parse(request.response);
                         // console.log(response);
                         if (res.status == true) {
-                            socket.emit('music-changed', res.data);
+                            socket.emit('music-changed', {
+                                ...res.data,
+                                'room': room,
+                                'userId': name
+                            });
                             tata.success(`Upload successful: ${res.message}`)
                         } else {
                             tata.error(`An error occurred: ${res.message}`)
@@ -70,7 +82,7 @@ window.addEventListener("DOMContentLoaded", event => {
                 }
             })
 
-            swal(`Welcome to ${room} Group`).then((value) => {
+            swal(`Welcome to ${roomName} Group`).then((value) => {
                         var playPromise = music.play();
                         music.currentTime = 0;
                         playPromise.then(_ => music.pause());
@@ -84,36 +96,70 @@ window.addEventListener("DOMContentLoaded", event => {
                         })
 
                         socket.on('changed-music', (fileData) => {
+                            console.log("ChangedMusic ::: ", fileData)
                             stopButton.click();
                             music.removeAttribute('src');
                             // music.setAttribute('src', '');
-                            music.setAttribute('src', `/public/audio/${room}-group/${fileData.musicData.name}`);
-                            musicName.innerText = `${fileData.musicData.name}`;
+                            music.setAttribute('src', `/public/audio/${room}-group/${fileData.name}`);
+                            musicName.innerText = `${fileData.name}`;
+                        })
+
+                        socket.on('ErrorOccurred', (message) => {
+                            tata.error('Message', message.message);
+                            swal('Oops', `${message.message}`, 'error').then(_ => {
+                                if (_) location.assign('/group/join')
+                            });
                         })
 
                         // Join Room
-                        socket.emit('JoinRoom', { name, room })
+                        console.log(name)
+                        console.log(room)
+                        socket.emit('JoinRoom', { uid: name, gid: room })
 
                         socket.on('UserListChanged', (users) => {
                             playSound();
-                            console.log(users);
+                            console.log('UserListChanged: ', users);
                             displayUsers(users);
                         })
 
+                        socket.on('welcome', (data) => {
+                            console.log('Welcome message to group: ', data)
+                            leaveButton.addEventListener('click', () => {
+                                swal({
+                                    text:`Do you want to leave the group?`,
+                                    button: {
+                                        text: 'Leave group',
+                                    }
+                                }).then(_ => {
+                                    if (_) {
+                                        socket.emit('LeaveGroup', {gid: room, uid: userData['_id']})
+                                    }
+                                })
+                            })
+                        })
+
+                        socket.on('LeaveGroup', () => {
+                            swal('You have successfully left the group').then(_ => {
+                                location.assign('/group/join')
+                            })
+                        })
+
                         socket.on('message', (message) => {
+                            console.log(message);
                             playSound();
                             tata.text(`New message from ${message.user.name}`, `${message.text}`)
                             displayMessage(message)
                         })
 
                         socket.on('user_is_typing', (message) => {
+                            console.log(socket)
                             user_is_typing.innerText = `${message}`;
                         })
 
                         msg.addEventListener('keyup', (e) => {
                             var msg = e.target.value;
                             // console.log(msg);
-                            socket.emit('typing', msg)
+                            socket.emit('typing', {message: msg, name: userData['name'], groupId: room})
                         })
 
                         // Music Controller
@@ -128,7 +174,8 @@ window.addEventListener("DOMContentLoaded", event => {
 
                             socket.emit('music_state_changed', {
                                 'state': 'PLAYING',
-                                'current_duration': music.currentTime
+                                'current_duration': music.currentTime,
+                                'room': room
                             })
                             music.play();
                         })
@@ -179,11 +226,12 @@ window.addEventListener("DOMContentLoaded", event => {
                         })
 
                         socket.on('welcome', (group) => {
-                            if (group.group.musicData != null) {
-                                var musicData = group.group.musicData;
+                            
+                            if (group.group.currentMusic != null) {
+                                var musicData = group.group.currentMusic;
                                 console.log(musicData)
                                 music.setAttribute('src', `/public/audio/${room}-group/${musicData.name}`);
-                                music.currentTime = group.group.currentPosition;
+                                music.currentTime = musicData.currentPosition;
                                 musicName.innerText = `${musicData.name}`;
                                 if (group.group.state == 'PLAYING') {
                                     music.play();
@@ -196,11 +244,13 @@ window.addEventListener("DOMContentLoaded", event => {
                             e.preventDefault();
                             // Get message from the input field
                             const message = e.target.elements.msg;
+                            console.log("Message ::: ",message);
                             // Emit Message to the server
                             // To make sure user is not sending am empty message, hahaha
                             if (message.value.length > 0) {
                                 socket.emit('chatMessage', {
                                     'text': message.value,
+                                    uid: userData['_id'], groupId: room
                                 });
                                 socket.emit('message', message.text)
                                 message.value = '';
@@ -211,11 +261,17 @@ window.addEventListener("DOMContentLoaded", event => {
                             // console.log(music.paused)
 
                             if (music.paused) {
-                                socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PAUSED' })
+                                socket.emit('music-current-time-changed', {
+                                    userId: userData['_id'], groupId: room,
+                                    'time': music.currentTime, 'state': 'PAUSED',
+                                })
                             } else {
                                 playButton.style.display = 'hidden';
                                 pauseButton.style.display = 'inline';
-                                socket.emit('music-current-time-changed', { 'time': music.currentTime, 'state': 'PLAYING' })
+                                socket.emit('music-current-time-changed', {
+                                    userId: userData['_id'], groupId: room,
+                                    'time': music.currentTime, 'state': 'PLAYING' 
+                                })
                             }
                             var duration = music.duration;
                             var currentTime = music.currentTime;
@@ -266,11 +322,11 @@ window.addEventListener("DOMContentLoaded", event => {
                             userInRoom.innerHTML = '';
                             users.map((user) => {
                                         const div = document.createElement('div');
-                                        div.setAttribute('userId', user.id);
+                                        div.setAttribute('userId', user.user.id);
                                         // div.setAttribute('onclick', "switchToAdmin()")
-                                        div.classList.add(`chatbox__user--${user.type == 'admin' ? 'active' : 'busy'}`)
+                                        div.classList.add(`chatbox__user--${user.isAdmin == true ? 'active' : 'busy'}`)
                                         div.innerHTML = `<div>
-                    <p>${user.name}</p>
+                    <p>${user.user.name}</p>
                     ${user.type =='admin' ? '' : user.type =='admin' ? '<button class="switch-admin" id="`${user.id}`">swap admin</button>' : ''}
                 </div>`
                 userInRoom.appendChild(div)

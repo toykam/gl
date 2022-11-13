@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
-const { GroupSchema } = require('./model.schemas');
+// const mongoose = require('mongoose');
+const { GroupModel } = require('./model.schemas');
 
-module.exports = mongoose.model("Group", GroupSchema);
+module.exports = GroupModel;

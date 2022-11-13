@@ -42,6 +42,9 @@
 
 <script>
     $(document).ready(() => {
+        var userData = localStorage.getItem('userData');
+        console.log(userData)
+        userData = JSON.parse(userData)
         $("#createGroupButton").click(() => {
             // $("#createGroupModal").modal('show')
             swal({
@@ -51,8 +54,7 @@
                     text: "Create group",
                     closeModal: false,
                 },
-                })
-                .then(name => {
+            }).then(name => {
                 if (!name) throw null;
                 console.log(name)
                 var formData = new FormData();
@@ -61,26 +63,24 @@
                     method: 'POST',
                     body: formData,
                     headers: {
-                        'user_id': '5fd73667093930269c66c8ce'
+                        'user_id': `${userData['_id']}`
                     }
                 });
-                })
-                .then(results => results.json())
-                .then(json => {
-                    console.log(json)
-                    if (json.status == true) {
-                        swal({
-                            title: "Success",
-                            text: json.message,
-                        }).then(_ => {
-                            window.location.assign(json.redirect)
-                        });
-                    } else {
-                        swal("Oh noes!", `${json.message}`, "error");
-                    }
-                    
-                })
-                .catch(err => {
+            }).then(results => results.json())
+            .then(json => {
+                console.log(json)
+                if (json.status == true) {
+                    swal({
+                        title: "Success",
+                        text: json.message,
+                    }).then(_ => {
+                        window.location.assign(json.redirect)
+                    });
+                } else {
+                    swal("Oh noes!", `${json.message}`, "error");
+                }
+                
+            }).catch(err => {
                 if (err) {
                     swal("Oh noes!", "unable to create group", "error");
                 } else {

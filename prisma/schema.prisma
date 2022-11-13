@@ -1,0 +1,99 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  email    String @unique
+  name     String
+  userName String @unique
+  password String
+  imageUrl String @default("https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Youth_Group_2005.jpg/220px-Youth_Group_2005.jpg")
+
+  groups          Group[]
+  groupMembership GroupMembership[]
+  playlist        MusicData[]
+
+  createdAt DateTime @default(now())
+}
+
+model Group {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name     String
+  imageUrl String @default("https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Youth_Group_2005.jpg/220px-Youth_Group_2005.jpg")
+
+  published Boolean   @default(false)
+  strict    Boolean   @default(false)
+  type      GroupType @default(Public)
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  members GroupMembership[]
+
+  playState   GroupPlayState @relation(fields: [playStateId], references: [id])
+  playStateId String @unique
+
+  createdAt   DateTime @default(now())
+  musicDataId String?  @db.ObjectId
+}
+
+model GroupMembership {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  groupId String
+  group   Group  @relation(fields: [groupId], references: [id])
+
+  isAdmin       Boolean @default(false)
+  canSwitchSong Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model MusicData {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type String
+  size Int
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  playState     GroupPlayState[]
+  
+}
+
+model GroupPlayState {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  musicDataId String?
+  musicData MusicData? @relation(fields: [musicDataId], references: [id])
+
+  groupId String @unique
+  group Group?
+
+  currentPosition Int @default(0)
+  musicState MusicState @default(STOPPED)
+}
+
+enum GroupType {
+  Public
+  Private
+}
+
+enum MusicState {
+  PLAYING
+  PAUSED
+  STOPPED
+}

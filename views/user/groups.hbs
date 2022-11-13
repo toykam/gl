@@ -1,6 +1,8 @@
 <div class="ui container">
     <h1>Groups</h1>
-    <button class="ui button tiny positive" id="createGroupButton">Create a group</button>
+    {{#if (ifNotEquals groupLength 0)}}
+        <button class="ui button tiny positive" id="createGroupButton">Create a group</button>
+    {{/if}}
 
     {{#if (ifEquals groupLength 0) }}
         <div class="ui center aligned container">
@@ -13,7 +15,7 @@
 
     <div class="ui eight column centered grid">
         {{#each groups as | group | }}
-            {{> one_group group=group }}
+            {{> one_group group=group public=false }}
         {{/each}}
     </div>
 </div>
@@ -25,6 +27,9 @@
 
 <script>
     $(document).ready(() => {
+        var userData = localStorage.getItem('userData');
+        console.log(userData)
+        userData = JSON.parse(userData)
         $(".ViewGroup").click(e => {
             console.log(e.target.attributes.group_id.value)
         })
@@ -34,10 +39,63 @@
         })
 
         $(".PublishGroup").click(e => {
-            console.log(e.target.attributes.group_id.value)
-            swal("Do you want to publish this group?", {
-                buttons: ["Not Yet!", "Absolutely"],
-            })
+            var groupId = e.target.attributes.group_id.value;
+            // console.log(e.target.attributes.group_id.value)
+            swal({
+                text: 'Do you want to publish this group?',
+                button: { text: 'Publish', closeModal: false },
+            }).then(value => {
+                if (!value) throw null;
+                return fetch(`/api/user/group/publish/${groupId}`, {
+                    method: 'POST',
+                    headers: {
+                        'user_id': `${userData['_id']}`
+                    }
+                });
+            }).then(value => value.json()).then(value => {
+                if (value.status == true) {
+                    swal(`Success`, `${value.message}`, 'success')
+                } else {
+                    swal(`Error`, `${value.message}`, 'success')
+                }
+            }).catch(err => {
+                if (err) {
+                    swal("Oh noes!", `An error occurred: ${err}`, "error");
+                } else {
+                    swal.stopLoading();
+                    swal.close();
+                }
+            });
+        })
+
+        $(".UnPublishGroup").click(e => {
+            var groupId = e.target.attributes.group_id.value;
+            // console.log(e.target.attributes.group_id.value)
+            swal({
+                text: 'Do you want to unpublish this group?',
+                button: { text: 'Publish', closeModal: false },
+            }).then(value => {
+                if (!value) throw null;
+                return fetch(`/api/user/group/unpublish/${groupId}`, {
+                    method: 'POST',
+                    headers: {
+                        'user_id': `${userData['_id']}`
+                    }
+                });
+            }).then(value => value.json()).then(value => {
+                if (value.status == true) {
+                    swal(`Success`, `${value.message}`, 'success')
+                } else {
+                    swal(`Error`, `${value.message}`, 'success')
+                }
+            }).catch(err => {
+                if (err) {
+                    swal("Oh noes!", `An error occurred: ${err}`, "error");
+                } else {
+                    swal.stopLoading();
+                    swal.close();
+                }
+            });
         })
 
         $(".DeleteGroup").click(e => {

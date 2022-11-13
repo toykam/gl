@@ -50,6 +50,8 @@
                 swal(`${res.message}`).then(val => {
                     window.location.assign(res.redirect);
                 });
+                console.log(res.data)
+                window.localStorage.setItem('userData', JSON.stringify(res.data));
                 msgDiv.innerHTML = `<p class='ui positive'>${res.message}</p>`;
             } else {
                 swal(`${res.message}`);

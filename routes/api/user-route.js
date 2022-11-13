@@ -1,9 +1,9 @@
 const express = require('express');
 const { Group, User } = require('../../models/connection');
-const groupModel = require('../../models/group.model');
-const { GroupMemberSchema, GroupMemberModel } = require('../../models/model.schemas');
-const { USERDATAKEY } = require('../../utils/constants');
-const myLocalStorage = require('../../utils/localStorage');
+const { GroupMemberModel } = require('../../models/model.schemas');
+const { v4 } = require("uuid");
+const { getUserDetail } = require('../../utils/users');
+const prismaClient = require('../../prisma/prisma-client');
 
 const router = express.Router();
 
@@ -12,22 +12,38 @@ router.post('/group', async (req, res) => {
     console.log(req.body)
     try {
         // var uid = myLocalStorage.getItem(USERDATAKEY);
-        var uid = req.header('user_id')
+        const session = req.session;
+        var uid = session.userId;
+        
         if (uid) {
-            var user = await User.findOne({'_id': uid})
+            var user = await getUserDetail({'uid': uid})
             if (user) {
+                const groupId = v4()
+                const group = await prismaClient.$transaction(async (tx) => {
+                    const group = await tx.group.create({
+                        data: {
+                            ownerId: uid,
+                            name: req.body.name
+                        }
+                    })
+                    const membership = await tx.groupMembership.create({
+                        data: {
+                            userId: uid,
+                            groupId: group.id,
+                            isAdmin: true,
+                            canSwitchSong: true, 
+                        }
+                    })
 
-                var group = new Group();
-                var groupMember = new GroupMemberModel();
-                // GroupMember
-                groupMember.user = user
-                groupMember.type = 'admin'
-                // if (req.body.name)
-    
-                group.name = req.body.name;
-                group.owner_id = uid;
-                group.members = [groupMember]
-                if (group.save()) {
+                    const playstate = await tx.groupPlayState.create({
+                        data: {
+                            groupId: group.id,
+                        }
+                    })
+
+                    return group;
+                })
+                if (group) {
                     res.json({status: true, message: 'Group created successfully', redirect: '/user/groups'})
                 } else {
                     res.json({status: false, message: 'Unable to create group', redirect: ''})
@@ -45,12 +61,18 @@ router.post('/group', async (req, res) => {
 
 router.get('/group', async (req, res) => {
     try {
-        var uid = req.header('user_id')
-        var groups = await Group.find({'owner_id': uid})
-        console.log(groups)
+        var uid = req.session['userId'];
+        var user = await prismaClient.user.findFirst({
+            where: {
+                id: uid
+            }, include: {
+                groups: true
+            }
+        })
+        // console.log(groups)
         res.json({
             status: true,
-            data: {groups}
+            data: {"groups": user.groups}
         })
     } catch(error) {
         res.json({
@@ -82,20 +104,30 @@ router.post('/group/:id', async(req, res) => {
 router.post('/group/publish/:id', async(req, res) => {
     try {
         // console.log(req.params.id);
-        var uid = req.header('user_id')
-        
-        var groupMember = new GroupMemberModel();
-        // GroupMember
-        groupMember.user = await User.findOne({'_id': uid}, 'name username _id imageUrl userType').exec();
-        groupMember.type = 'admin'
+        var uid = req.session['userId']
+        if (uid) {
 
-        Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': true, members: [groupMember]}, {upsert: true}, () => {
+            await prismaClient.group.updateMany({
+                where: {
+                    id: req.params.id,
+                    ownerId: uid
+                },
+                data: {
+                    published: true
+                }
+            })
             res.json({
                 status: true,
                 message: 'Group published'
             })
-        })
+        } else {
+            res.json({
+                status: false,
+                message: 'Access denied, login and try again'
+            })
+        }
     } catch(error) {
+        console.log("Error :: ", error)
         res.json({
             status: false,
             message: error
@@ -106,19 +138,37 @@ router.post('/group/publish/:id', async(req, res) => {
 router.post('/group/unpublish/:id', async(req, res) => {
     try {
         // console.log(req.params.id);
-        var uid = req.header('user_id')
-        Group.findOneAndUpdate({'_id': req.params.id, 'owner_id': uid}, {'published': false, members: []}, {upsert: true}, () => {
+        var uid = req.session['userId']
+        if (uid) {
+            await prismaClient.group.updateMany({
+                where: {
+                    id: req.params.id,
+                    ownerId: uid
+                },
+                data: {
+                    published: false
+                }
+            })
             res.json({
                 status: true,
                 message: 'Group unpublished'
             })
-        })
+        } else {
+            res.json({
+                status: false,
+                message: 'Access denied, login and try again'
+            })
+        }
     } catch(error) {
         res.json({
             status: false,
             message: error
         })
     }
+})
+
+router.get('/api/logout', async (req, res) => {
+    
 })
 
 module.exports = router;

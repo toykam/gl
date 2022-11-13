@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-mongoose.connect('mongodb+srv://hacktor-chat-admin:hacktor-chat-admin-12345@hactor-chat-app.vzhwk.mongodb.net/hacktor-chat-app?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (error) => {
+const connection = mongoose.connect('mongodb+srv://locals-admin:NEpL8mYY3A9akrSn@cluster.ofd6c.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (error) => {
     if (!error) {
         console.log('Database is running');
     } else {
@@ -12,7 +12,7 @@ const User = require('./user.model')
 const Group = require('./group.model')
 
 module.exports = {
-    mongoose,
+    connection,
     User,
     Group
 }

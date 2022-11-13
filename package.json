@@ -12,6 +12,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@prisma/client": "^4.5.0",
         "bcrypt": "^5.0.0",
         "connect-mongo": "^3.2.0",
         "cors": "^2.8.5",
@@ -19,10 +20,12 @@
         "express-fileupload": "^1.2.0",
         "express-handlebars": "^5.2.0",
         "express-session": "^1.17.1",
+        "express-validator": "^6.9.0",
         "moment": "^2.29.1",
         "mongoose": "^5.11.7",
         "node-localstorage": "^2.1.6",
         "nodemon": "^2.0.6",
+        "prisma": "^4.5.0",
         "socket.io": "^3.0.4",
         "socketio-file-upload": "^0.7.2",
         "uuid": "^8.3.2"

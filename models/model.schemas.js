@@ -20,10 +20,11 @@ const UserSchema = new mongoose.Schema({
 })
 
 const GroupMemberSchema = new mongoose.Schema({
-    user: { type: UserSchema, required: "Required" },
+    user: { type: UserSchema, required: true },
     canTalk: { type: Boolean, default: false },
     canSwitchMusic: { type: Boolean, default: false },
-    type: { type: String, default: 'member' }
+    type: { type: String, default: 'member' },
+    groupId: { type: String, required: true }
 })
 
 const GroupSchema = new mongoose.Schema({
@@ -35,6 +36,7 @@ const GroupSchema = new mongoose.Schema({
     strict: { type: Boolean, default: false },
     published: { type: Boolean, default: false },
     type: {type: String, default: 'public' },
+    id: {type: String, required: true },
     musics: { type: [MusicDataSchema], default: null },
     musicData: { type: MusicDataSchema, default: null },
     joinedAt: { type: Date, default: Date.now()},
@@ -42,10 +44,11 @@ const GroupSchema = new mongoose.Schema({
 })
 
 
-const GroupMemberModel = mongoose.model("GroupMember", GroupMemberSchema);
+const GroupMemberModel = mongoose.model("GroupMemberModel", GroupMemberSchema);
 const MusicDataModel = mongoose.model("MusicDataModel", MusicDataSchema);
-
+const GroupModel = mongoose.model("GroupModel", GroupSchema);
+const UserModel = mongoose.model("UserModel", UserSchema);
 
 module.exports = {
-    GroupSchema, UserSchema, MusicDataModel, GroupMemberModel
+    GroupModel, UserModel, MusicDataModel, GroupMemberModel
 }

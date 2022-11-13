@@ -1,7 +1,7 @@
 <div class="four wide column">
     <div class="card">
         {{#if group.published }}
-            <a class="ui red ribbon label">PUBLISHED</a>
+            <a class="ui green ribbon label">PUBLISHED</a>
         {{/if}}
         {{#if (ifEquals group.published false) }}
             <a class="ui red ribbon label">NOT PUBLISHED</a>
@@ -13,10 +13,22 @@
         </div>
         
         <div class="ui icon buttons">
-            <button class="ui positive button ViewGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="eye icon"></i></button>
-            <button class="ui blue button EditGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="edit icon"></i></button>
-            <button class="ui orange button PublishGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="open icon"></i></button>
-            <button class="ui negative button DeleteGroup" group_id="{{ group._id }}"><i group_id="{{ group._id }}" class="trash icon"></i></button>
+            {{#if public }}
+                <button class="ui positive button JoinGroup" group_id="{{ group.id }}" name={{ group.name }}>Join Group</button>
+            {{/if}}
+
+            {{#if (ifEquals public false) }}
+                <button class="ui blue button EditGroup" group_id="{{ group.id }}"><i group_id="{{ group.id }}" class="edit icon"></i></button>
+                {{#if (ifEquals group.published false) }}
+                    <button class="ui orange button PublishGroup" group_id="{{ group.id }}"><i group_id="{{ group.id }}" class="save icon"></i></button>
+                {{/if}}
+
+                {{#if group.published }}
+                    <button class="ui orange button UnPublishGroup" group_id="{{ group.id }}"><i group_id="{{ group.id }}" class="refresh icon"></i></button>
+                {{/if}}
+                
+                <button class="ui negative button DeleteGroup" group_id="{{ group.id }}"><i group_id="{{ group.id }}" class="trash icon"></i></button>
+            {{/if}}
         </div>
     </div>
 </div>

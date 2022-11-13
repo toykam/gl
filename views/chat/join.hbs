@@ -1,13 +1,13 @@
 <div class='container'>
-    <div style="display: flex;">
-        <h1 id="room-name"> {{ group.room }}</h1> &nbsp;&nbsp;&nbsp;&nbsp;
-        <h1 id="user-name"> {{ group.name }}</h1>
+    <div>
+        <h1 id="room-name-name"> {{ group.name }}</h1>
+        <h6 style="color: white; font-weight: 100;" id="user-name"> {{ group.userName }}</h6>
+        <h1 id="room-name" style="display: none;">{{ group.room }}</h1>
     </div>
     <div class='chatbox'>
         {{> users_in_room }}
 
         {{> messages }}
-
 
         <div id="user_is_typing" style="font-style: italic; font-size: 12px;font-weight: 900;"></div>
         <form id="chat-form">

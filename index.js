@@ -1,21 +1,30 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const path = require('path')
-const fs = require('fs');
 const http = require('http')
 const Socket = require('socket.io');
-const session = require('express-session');
 const connection = require('./models/connection');
-// Enable cors
-var cors = require('cors')
-
 const fileUpload = require('express-fileupload');
 const initSocketConnections = require('./utils/socket-connections');
 const myLocalStorage = require('./utils/localStorage');
 const { USERDATAKEY } = require('./utils/constants');
+const { expressValidator } = require('express-validator');
+const expressSession = require('express-session');
+const { SES_NAME, SES_SECRET } = require('./utils/constants')
 
+const { 
+    NODE_ENV = 'development',
+    SESS_NAME = SES_NAME,
+    SESS_SECRET = SES_SECRET
+} = process.env
+
+const IN_PROD = NODE_ENV == 'production' ? true : false 
+
+// Enable cors
+var cors = require('cors');
+const { getUserDetail } = require('./utils/users');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const server = http.createServer(app)
 
 const io = Socket(server, {
@@ -29,7 +38,7 @@ const io = Socket(server, {
     pingTimeout: 30000,
     upgradeTimeout: 20000,
     cors: {
-        origin: ["http://localhost:3001", "http://localhost:3000", "https://group-listening.herokuapp.com"],
+        origin: ["*"],
         methods: ["GET", "POST", "PATCH"],
         allowedHeaders: ["me"],
         credentials: true
@@ -50,6 +59,18 @@ app.use(cors(corsOptions))
 app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+// app.use(expressValidator())
+app.use(expressSession({
+    name: SESS_NAME,
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 2,
+        sameSite: true, secure: IN_PROD
+    },
+    secret: SESS_SECRET,
+    saveUninitialized: false, 
+    resave: false,
+    store: connection.connection,
+}))
 
 app.engine('hbs', exphbs({
     defaultLayout: 'main',
@@ -61,31 +82,43 @@ app.engine('hbs', exphbs({
     ],
     helpers: require('./utils/handle-bars.helpers'),
 }));
+
 app.set('view engine', 'hbs');
 
 app.use(fileUpload({
     createParentPath: true,
 }));
 
-
 // app.use((req, res, next) => {
+//     // console.log(req.session)
 //     next();
 // })
 
-app.use('/user', async(req, res, next) => {
+const isLoggedInFunc = async(req, res, next) => {
     try {
-        var uid = myLocalStorage.getItem(USERDATAKEY)
-        if (uid) {
-            var user = await connection.User.find({'_id': uid});
-            req.user = user;
-            next();
+        console.log(req.originalUrl)
+        var session = req.session;
+
+        var userId = session.userId;
+        // var userId = req.session.userId;
+        console.log("UserId", userId)
+        if (userId) {
+            var user = await getUserDetail({'uid': userId})
+            res.locals.user = user;
+            next(); 
         } else {
+            session['intendingPath'] = req.originalUrl;
+            
             res.redirect('/auth/login')
         }
     } catch (error) {
         res.redirect('/auth/login')
     }
-})
+}
+
+app.use('/user', isLoggedInFunc)
+app.use('/join', isLoggedInFunc)
+app.use('/chat/join', isLoggedInFunc)
 
 // Page ROutes
 app.use('/chat', require('./routes/chat-route'))
@@ -99,10 +132,22 @@ app.use('/api/auth', require('./routes/api/auth-route'))
 app.use('/api/user', require('./routes/api/user-route'))
 app.use('/api/group', require('./routes/api/group-route'))
 
+
+app.use((req, res, next) => {
+    const isLoggedin = req.session.userId != null;
+    // console.log("IsLoggedIn ::: ", isLoggedin)
+    // console.log("Session ::: ", req.session)
+    req['isLoggedIn'] = isLoggedin;
+    next();
+})
+
 app.get('/', (req, res) => {
+
     res.render('index', {
-        'pageTitle': 'Home : Group Listening'
+        'pageTitle': 'Home : Group Listening',
+        'isLoggedIn': req['isLoggedIn']
     });
+
 })
 
 server.listen(port, () => {

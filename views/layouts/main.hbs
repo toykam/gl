@@ -27,9 +27,19 @@
       <nav class="ui container">
         <a href="/" class="ui inverted header">Group Listening</a>
         <div class="ui borderless inverted compact menu">
-          <a class="active item nav-items " href="#home">Home</a> 
-          <a class="item nav-items" href="#features">Feature</a>
-          <a class="item nav-items" href="#contact">Contact</a>
+          
+
+          {{#if (ifEquals isLoggedIn false)}}
+            <a class="active item nav-items " href="#home">Home</a> 
+            <a class="item nav-items" href="#features">Feature</a>
+            <a class="item nav-items" href="#contact">Contact</a>
+          {{/if}}
+
+          {{#if (ifEquals isLoggedIn true)}}
+            <a class="item" href="/user">Dashboard</a>
+            <a class="item" href="/user/logout">Logout</a>
+          {{/if}}
+          
         </div>
       </nav>
 
