@@ -5,6 +5,7 @@ const { createGroup, getGroupDetail, updateGroupDetail, deleteGroup, leaveGroup,
 const formatMessage = require('../message.model');
 const { botName } = require('../constants');
 const { Group, User } = require('../../models/connection');
+const { groupPlayState } = require('../../prisma/prisma-client');
 
 module.exports = function initGroupSocketConnection(io, socket) {
     socket.on('add-music-to-group', (musicData) => {
@@ -43,8 +44,10 @@ module.exports = function initGroupSocketConnection(io, socket) {
                 socket.join(_.id);
                 // Emit message to the other users of new connection
                 // Bot will welcome user to the room
+                const membership = _.members.filter((e) => e.user.id == uid)[0]
+                // console.log("JoinGroup ::: ", membership);
                 socket.emit('message', await formatMessage('bot-id', 'Welcome to the Chat Room'));
-                socket.emit('welcome', { group: _, user: usr });
+                socket.emit('welcome', { group: _, user: usr, 'playState': groupPlayState[_.id], 'membership': membership });
                 // socket.emit('welcome_music', { group: _, user:usr });
                 // console.log(user);
                 // Broadcast when a user connects
@@ -128,7 +131,7 @@ module.exports = function initGroupSocketConnection(io, socket) {
 
     socket.on('LeaveGroup', async({mid}) => {
         try {
-            
+        
             leaveGroup({"membershipId": mid}).then(_ => {
                 socket.to(_.id).emit('UserListChanged', _.members)
                 socket.emit('LeaveGroup', {})

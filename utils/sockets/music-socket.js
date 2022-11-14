@@ -1,22 +1,25 @@
 const { getCurrentUser, getUserDetail } = require('./../users');
 const { getGroupDetail, updateGroupDetail, checkIfIsGroupAdmin } = require('./../groups');
 const prismaClient = require('../../prisma/prisma-client');
+const { groupPlayState } = require('../../prisma/prisma-client');
 
 module.exports = function initMusicSocketConnection(io, socket) {
     // Listen to music change
     socket.on('music-changed', async (fileData) => {
 
         console.log("MusicChanges ::: ", fileData)
-        const group = await getGroupDetail(fileData.room);
+        const group = await getGroupDetail(fileData.groupId);
         const isAdmin = await checkIfIsGroupAdmin({
-            groupId: fileData.room, userId: fileData.userId
+            groupId: fileData.groupId, userId: fileData.userId
         })
+
 
         const musicdata = await prismaClient.musicData.create({
             data: {
                 name: fileData.name, 
                 size: fileData.size,
-                type: fileData.type
+                type: fileData.mimetype,
+                userId: fileData.userId
             }
         })
 
@@ -37,27 +40,25 @@ module.exports = function initMusicSocketConnection(io, socket) {
                 }
             })
             
-            io.to(fileData.room).emit('changed-music', fileData);
+            io.to(fileData.groupId).emit('changed-music', fileData);
         } else {
             io.to(fileData.userId).emit('changed-music', fileData);
         }
     })
 
+
     socket.on('music-current-time-changed', async (data) => {
+        console.log("MusicTimeChanged ::: ",data)
         const user = await getUserDetail({uid: data.userId});
         if (user) {
             if (checkIfIsGroupAdmin({groupId: data.groupId, userId: user.id})) {
                 const group = await getGroupDetail(data.groupId);
-                await prismaClient.groupPlayState.update({
-                    where: {
-                        id: group.playState.id,
-                    }, 
-                    data: {
-                        musicState: data.state,
-                        currentPosition: data.time
-                    }
-                })
-                // updateGroupDetail(group);
+                
+                groupPlayState[group.id] = {
+                    ...groupPlayState[group.id],
+                    musicState: data.state,
+                    currentPosition: data.time
+                }
                 socket.broadcast.to(data.groupId).emit('music-current-time-changed', {time: data.time, state: data.state})
             }
         }
@@ -67,11 +68,25 @@ module.exports = function initMusicSocketConnection(io, socket) {
     })
 
     socket.on('music_state_changed', (data) => {
-        socket.broadcast.to(data.room).emit('music_state_changed', data)
+        console.log("MusicStateChanged ::: ", data)
+
+        if (checkIfIsGroupAdmin({groupId: data.groupId, userId: data.userId})) {
+            socket.broadcast.to(data.groupId).emit('music_state_changed', data)
+        } else {
+            socket.broadcast.to(data.userId).emit('music_state_changed', data)
+        }
+
+
+        socket.broadcast.to(data.groupId).emit('music_state_changed', data)
     })
 
     socket.on('music-source-changed', (data) => {
+
+        if (checkIfIsGroupAdmin({groupId: data.groupId, userId: data.id})) {
+            socket.broadcast.to(data.groupId).emit('music-source-changed', data)
+        } else {
+            socket.broadcast.to(data.userId).emit('music-source-changed', data)
+        }
         
-        socket.broadcast.to(data.room).emit('music-source-changed', data)
     })
 }

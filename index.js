@@ -11,6 +11,18 @@ const { USERDATAKEY } = require('./utils/constants');
 const { expressValidator } = require('express-validator');
 const expressSession = require('express-session');
 const { SES_NAME, SES_SECRET } = require('./utils/constants')
+const session = require("express-session")
+let RedisStore = require("connect-redis")(session)
+
+const { createClient } = require("redis")
+let redisClient = createClient({ 
+    legacyMode: true,
+    
+})
+redisClient.connect().catch(console.error)
+
+const sessionStore = new RedisStore({ client: redisClient });
+
 
 const { 
     NODE_ENV = 'development',
@@ -68,9 +80,16 @@ app.use(expressSession({
     },
     secret: SESS_SECRET,
     saveUninitialized: false, 
-    resave: false,
-    store: connection.connection,
+    resave: true,
+    store: sessionStore,
 }))
+
+app.use(function (req, res, next) {
+    if (!req.session) {
+    return next(new Error("oh no")) // handle error
+    }
+    next() // otherwise continue
+})
 
 app.engine('hbs', exphbs({
     defaultLayout: 'main',

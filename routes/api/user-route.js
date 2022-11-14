@@ -14,16 +14,31 @@ router.post('/group', async (req, res) => {
         // var uid = myLocalStorage.getItem(USERDATAKEY);
         const session = req.session;
         var uid = session.userId;
-        
+        console.log("UserId ::: ", uid)
         if (uid) {
             var user = await getUserDetail({'uid': uid})
             if (user) {
-                const groupId = v4()
+                // const groupId = v4()
+
+                
+
                 const group = await prismaClient.$transaction(async (tx) => {
+
+                    const playstate = await tx.groupPlayState.create({
+                        data: {
+                            groupId: 'new-group',
+                        }
+                    })
+
                     const group = await tx.group.create({
                         data: {
                             ownerId: uid,
-                            name: req.body.name
+                            name: req.body.name,
+                            playStateId: playstate.id,
+                        },
+                        include: {
+                            playState: true, 
+                            members: true
                         }
                     })
                     const membership = await tx.groupMembership.create({
@@ -34,11 +49,10 @@ router.post('/group', async (req, res) => {
                             canSwitchSong: true, 
                         }
                     })
-
-                    const playstate = await tx.groupPlayState.create({
-                        data: {
-                            groupId: group.id,
-                        }
+                    
+                    await tx.groupPlayState.update({
+                        where: { id: playstate.id},
+                        data: { groupId: group.id }
                     })
 
                     return group;

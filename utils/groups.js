@@ -2,7 +2,8 @@
 const { Group } = require("../models/connection");
 const { GroupMemberModel } = require("../models/model.schemas");
 const prismaClient = require("../prisma/prisma-client");
-
+const redisClient = require("./redis-client");
+var groupPlayState = [];
 // function to joinGroup
 async function joinGroup({uid, gid}) {
     // get group members
@@ -60,6 +61,8 @@ async function swapGroupAdmin2({membershipId}) {
 }
 // function to get group detail
 async function getGroupDetail({groupId}) {
+
+    // redisClient.get(`group_detail_${groupId}`, )
     const group = await prismaClient.group.findFirst({
         where: { id: groupId },
         include: {
@@ -67,7 +70,7 @@ async function getGroupDetail({groupId}) {
                 include: {
                     user: {
                         select: {
-                            name: true, imageUrl: true
+                            name: true, imageUrl: true, id: true
                         }
                     }
                 }
@@ -84,7 +87,7 @@ async function getGroupDetail({groupId}) {
             }
         }
     });
-    console.log("GroupDetail ::: ", group);
+    // console.log("GroupDetail ::: ", group);
     return group;
 }
 // function to return group admins
@@ -148,5 +151,6 @@ async function getUsersGroups(uid) {
 
 module.exports = {
     joinGroup, getGroupDetail, swapGroupAdmin2, leaveGroup, checkIfIsGroupAdmin, getGroupAdmin, getGroupMembers,
-    getPublishedGroups, getUsersGroups
+    getPublishedGroups, getUsersGroups,
+    groupPlayState
 }

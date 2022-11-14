@@ -38,11 +38,10 @@ model Group {
 
   members GroupMembership[]
 
-  playState   GroupPlayState @relation(fields: [playStateId], references: [id])
-  playStateId String @unique
+  playState   GroupPlayState? @relation(fields: [playStateId], references: [id])
+  playStateId String? @unique
 
   createdAt   DateTime @default(now())
-  musicDataId String?  @db.ObjectId
 }
 
 model GroupMembership {
@@ -80,10 +79,10 @@ model GroupPlayState {
   musicDataId String?
   musicData MusicData? @relation(fields: [musicDataId], references: [id])
 
-  groupId String @unique
+  groupId String
   group Group?
 
-  currentPosition Int @default(0)
+  currentPosition Float @default(0)
   musicState MusicState @default(STOPPED)
 }
 

@@ -70,7 +70,7 @@ window.addEventListener("DOMContentLoaded", event => {
                         if (res.status == true) {
                             socket.emit('music-changed', {
                                 ...res.data,
-                                'room': room,
+                                'groupId': room,
                                 'userId': name
                             });
                             tata.success(`Upload successful: ${res.message}`)
@@ -124,7 +124,11 @@ window.addEventListener("DOMContentLoaded", event => {
 
                         socket.on('welcome', (data) => {
                             console.log('Welcome message to group: ', data)
-                            leaveButton.addEventListener('click', () => {
+                            leaveButton.setAttribute('mid', data.membership.id)
+                            leaveButton.addEventListener('click', (e) => {
+                                // console.log("LeavingGroup ::; ", e.target);
+                                const mid = leaveButton.getAttribute('mid');
+                                console.log("Mid ::: ", mid)
                                 swal({
                                     text:`Do you want to leave the group?`,
                                     button: {
@@ -132,7 +136,7 @@ window.addEventListener("DOMContentLoaded", event => {
                                     }
                                 }).then(_ => {
                                     if (_) {
-                                        socket.emit('LeaveGroup', {gid: room, uid: userData['_id']})
+                                        socket.emit('LeaveGroup', {mid})
                                     }
                                 })
                             })
@@ -175,13 +179,14 @@ window.addEventListener("DOMContentLoaded", event => {
                             socket.emit('music_state_changed', {
                                 'state': 'PLAYING',
                                 'current_duration': music.currentTime,
-                                'room': room
+                                'groupId': room,
+                                'userId': name
                             })
                             music.play();
                         })
 
                         socket.on('music_state_changed', (data) => {
-                            console.log(data);
+                            console.log("MusicStateChanged ::: ", data);
                             if (data.state == 'PLAYING') {
                                 music = document.getElementById("music");
                                 music.currentTime = data.current_duration;
@@ -207,7 +212,9 @@ window.addEventListener("DOMContentLoaded", event => {
                             // music.play();
                             socket.emit('music_state_changed', {
                                 'state': 'PAUSED',
-                                'current_duration': music.currentTime
+                                'current_duration': music.currentTime,
+                                'groupId': room,
+                                'userId': name
                             })
                         })
 
@@ -221,19 +228,24 @@ window.addEventListener("DOMContentLoaded", event => {
                             $('#stop-button').hide();
                             socket.emit('music_state_changed', {
                                 'state': 'STOPPED',
-                                'current_duration': music.currentTime
+                                'current_duration': music.currentTime,
+                                'groupId': room,
+                                'userId': name
                             })
                         })
 
                         socket.on('welcome', (group) => {
-                            
-                            if (group.group.currentMusic != null) {
-                                var musicData = group.group.currentMusic;
-                                console.log(musicData)
+                            console.log("GroupWelcome ::: ", group)
+                            const groupPlayState = group.group.playState;
+                            // playState
+                            if (groupPlayState.musicData != null) {
+                                var musicData = groupPlayState.musicData;
+                                const playState = group.playState;
+                                // console.log(musicData)
                                 music.setAttribute('src', `/public/audio/${room}-group/${musicData.name}`);
-                                music.currentTime = musicData.currentPosition;
+                                music.currentTime = parseFloat(playState.currentPosition.toString());
                                 musicName.innerText = `${musicData.name}`;
-                                if (group.group.state == 'PLAYING') {
+                                if (playState.state == 'PLAYING') {
                                     music.play();
                                 }
                             }
@@ -262,14 +274,14 @@ window.addEventListener("DOMContentLoaded", event => {
 
                             if (music.paused) {
                                 socket.emit('music-current-time-changed', {
-                                    userId: userData['_id'], groupId: room,
+                                    'userId': userData['id'], 'groupId': room,
                                     'time': music.currentTime, 'state': 'PAUSED',
                                 })
                             } else {
                                 playButton.style.display = 'hidden';
                                 pauseButton.style.display = 'inline';
                                 socket.emit('music-current-time-changed', {
-                                    userId: userData['_id'], groupId: room,
+                                    userId: userData['id'], groupId: room,
                                     'time': music.currentTime, 'state': 'PLAYING' 
                                 })
                             }
@@ -323,6 +335,7 @@ window.addEventListener("DOMContentLoaded", event => {
                             users.map((user) => {
                                         const div = document.createElement('div');
                                         div.setAttribute('userId', user.user.id);
+                                        div.setAttribute('membershipId', `${user.id}`);
                                         // div.setAttribute('onclick', "switchToAdmin()")
                                         div.classList.add(`chatbox__user--${user.isAdmin == true ? 'active' : 'busy'}`)
                                         div.innerHTML = `<div>
