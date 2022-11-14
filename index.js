@@ -17,7 +17,7 @@ let RedisStore = require("connect-redis")(session)
 const { createClient } = require("redis")
 let redisClient = createClient({ 
     legacyMode: true,
-    
+    url: "redis://red-cdp6171a6gdooi1hdlc0:6379"
 })
 redisClient.connect().catch(console.error)
 

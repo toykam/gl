@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const connection = mongoose.connect('mongodb+srv://locals-admin:NEpL8mYY3A9akrSn@cluster.ofd6c.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (error) => {
+const connection = mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }, (error) => {
     if (!error) {
         console.log('Database is running');
     } else {
