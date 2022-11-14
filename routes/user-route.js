@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/logout', async (req, res) => {
     req.session.destroy(() => {
         res.clearCookie(SES_NAME)
-        req.session.userId = null;
-        console.log(req.session)
+        // req.session.destroy();
+        // console.log(req.session)
         res.redirect('/')
     })
 })

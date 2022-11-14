@@ -3,25 +3,19 @@ const exphbs = require('express-handlebars');
 const path = require('path')
 const http = require('http')
 const Socket = require('socket.io');
-const connection = require('./models/connection');
 const fileUpload = require('express-fileupload');
 const initSocketConnections = require('./utils/socket-connections');
-const myLocalStorage = require('./utils/localStorage');
-const { USERDATAKEY } = require('./utils/constants');
-const { expressValidator } = require('express-validator');
 const expressSession = require('express-session');
 const { SES_NAME, SES_SECRET } = require('./utils/constants')
-const session = require("express-session")
-let RedisStore = require("connect-redis")(session)
+const MongoDBStore = require('connect-mongodb-session')(expressSession);
+require("dotenv").config()
 
-const { createClient } = require("redis")
-let redisClient = createClient({ 
-    legacyMode: true,
-    url: "redis://red-cdp6171a6gdooi1hdlc0:6379"
+
+var sessionStore = new MongoDBStore({
+    uri: process.env.DATABASE_URL,
+    collection: 'sessions'
 })
-redisClient.connect().catch(console.error)
 
-const sessionStore = new RedisStore({ client: redisClient });
 
 
 const { 
